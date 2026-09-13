@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![PyPI Version](https://img.shields.io/badge/pypi-v0.2.0-blue.svg?style=flat-square&logo=pypi)](https://pypi.org/project/astral-model/)
+[![PyPI Version](https://img.shields.io/badge/pypi-v0.2.1-blue.svg?style=flat-square&logo=pypi)](https://pypi.org/project/astral-model/)
 [![Python Versions](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue.svg?style=flat-square&logo=python)](https://pypi.org/project/astral-model/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg?style=flat-square)](LICENSE)
 [![Build Status](https://img.shields.io/badge/tests-passing-brightgreen.svg?style=flat-square)](test_astral.py)
@@ -397,7 +397,7 @@ astral-model/
 ├── astral_model.py             # Standalone drop-in module
 ├── benchmark_models.py         # Multi-dataset 10-baseline benchmarking suite
 ├── benchmark_results.json      # Full empirical baseline metrics
-├── test_astral.py              # Automated test suite (v0.2.0)
+├── test_astral.py              # Automated test suite (v0.2.1)
 ├── pyproject.toml              # Modern PEP 517/518 build configuration
 ├── setup.py                    # Backward-compatibility installer
 ├── LICENSE                     # Apache License 2.0

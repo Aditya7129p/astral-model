@@ -1,7 +1,7 @@
 """
 test_astral.py
 ==============
-Unified, comprehensive test suite for AstralModel (v0.2.0+).
+Unified, comprehensive test suite for AstralModel (v0.2.1+).
 
 Covers:
   1. Package metadata & versioning (astral_model.version, __version__)
@@ -38,10 +38,10 @@ from astral_model import (
 def test_package_metadata():
     """Verify package versioning and metadata."""
     print("Testing package metadata and versioning …")
-    assert __version__ == "0.2.0"
-    assert version == "0.2.0"
-    assert AstralModel.version == "0.2.0"
-    assert AstralModel.__version__ == "0.2.0"
+    assert __version__ == "0.2.1"
+    assert version == "0.2.1"
+    assert AstralModel.version == "0.2.1"
+    assert AstralModel.__version__ == "0.2.1"
     assert hasattr(astral_model, "__version_info__")
     print("  [OK] Package metadata verified.")
 

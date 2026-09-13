@@ -1,7 +1,7 @@
 # ASTRAL User Guide & Practical API Reference
 
 > **ASTRAL: Adaptive Spectral Resonance Decomposition & Invariant Risk Minimization for Interpretable Tabular Machine Learning**  
-> *Author:* Aditya Pandey (<aditya9708p@gmail.com>) &bull; *Version:* 0.2.0 &bull; *License:* Apache-2.0
+> *Author:* Aditya Pandey (<aditya9708p@gmail.com>) &bull; *Version:* 0.2.1 &bull; *License:* Apache-2.0
 
 ---
 

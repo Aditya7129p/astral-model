@@ -34,8 +34,8 @@ import warnings
 import numpy as np
 
 # Package Version & Metadata
-__version__ = "0.2.0"
-__version_info__ = (0, 2, 0)
+__version__ = "0.2.1"
+__version_info__ = (0, 2, 1)
 version = __version__
 __author__ = "AstralModel Contributors"
 __license__ = "Apache-2.0"
