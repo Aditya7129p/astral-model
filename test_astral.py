@@ -93,6 +93,8 @@ def test_binary_classification():
     score_dict = model.score(X_test, y_test)
     assert "accuracy" in score_dict
     assert "f1_macro" in score_dict
+    assert "roc_auc" in score_dict
+    assert score_dict["roc_auc"] >= 0.50
     assert score_dict["accuracy"] > 0.60
     print(f"  [OK] Binary classification score: acc={score_dict['accuracy']:.3f}, f1={score_dict['f1_macro']:.3f}")
 

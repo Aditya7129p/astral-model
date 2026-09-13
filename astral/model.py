@@ -268,6 +268,69 @@ def _compute_accuracy(y_true, y_pred):
     return float(np.mean(np.asarray(y_true) == np.asarray(y_pred)))
 
 
+def _compute_roc_auc(y_true, y_scores):
+    """
+    Compute ROC-AUC score for binary or multiclass classifications in pure NumPy/SciPy.
+    """
+    if y_scores is None:
+        return None
+    try:
+        from scipy.stats import rankdata
+    except Exception:
+        def rankdata(a):
+            order = np.argsort(a)
+            ranks = np.empty(len(a), dtype=float)
+            ranks[order] = np.arange(1, len(a) + 1, dtype=float)
+            sorted_a = a[order]
+            unique_vals, counts = np.unique(sorted_a, return_counts=True)
+            if len(unique_vals) < len(a):
+                idx = 0
+                for count in counts:
+                    if count > 1:
+                        tied_ranks = ranks[order[idx:idx + count]]
+                        ranks[order[idx:idx + count]] = np.mean(tied_ranks)
+                    idx += count
+            return ranks
+
+    y_true = np.asarray(y_true)
+    y_scores = np.asarray(y_scores)
+
+    if y_scores.ndim == 1:
+        unique_cls = np.unique(y_true)
+        if len(unique_cls) != 2:
+            return 0.5
+        pos = (y_true == unique_cls[1])
+        n_pos = int(np.sum(pos))
+        n_neg = len(y_true) - n_pos
+        if n_pos == 0 or n_neg == 0:
+            return 0.5
+        ranks = rankdata(y_scores)
+        return float((np.sum(ranks[pos]) - n_pos * (n_pos + 1) / 2.0) / (n_pos * n_neg))
+    elif y_scores.ndim == 2:
+        n_classes = y_scores.shape[1]
+        if n_classes == 2:
+            unique_cls = np.unique(y_true)
+            pos = (y_true == unique_cls[-1])
+            n_pos = int(np.sum(pos))
+            n_neg = len(y_true) - n_pos
+            if n_pos == 0 or n_neg == 0:
+                return 0.5
+            ranks = rankdata(y_scores[:, 1])
+            return float((np.sum(ranks[pos]) - n_pos * (n_pos + 1) / 2.0) / (n_pos * n_neg))
+        else:
+            aucs = []
+            for c in range(n_classes):
+                pos = (y_true == c)
+                n_pos = int(np.sum(pos))
+                n_neg = len(y_true) - n_pos
+                if n_pos > 0 and n_neg > 0:
+                    ranks = rankdata(y_scores[:, c])
+                    auc_c = float((np.sum(ranks[pos]) - n_pos * (n_pos + 1) / 2.0) / (n_pos * n_neg))
+                    aucs.append(auc_c)
+            return float(np.mean(aucs)) if aucs else 0.5
+    return None
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 #  RESONANCE BASIS FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1311,7 +1374,9 @@ class AstralModel:
             raise ValueError("y_true must be provided: model.score(y_pred, y_test) or model.score(X_test, y_test)")
 
         y_pred_arr = np.asarray(y_pred)
+        X_eval = None
         if y_pred_arr.ndim == 2 and y_pred_arr.shape[1] == self._n_features:
+            X_eval = y_pred_arr
             y_pred = self.predict(y_pred)
 
         valid_mask = np.array([
@@ -1339,14 +1404,31 @@ class AstralModel:
             f1_mac = _compute_f1(y_true_eval, y_pred_eval, "macro")
             f1_w = _compute_f1(y_true_eval, y_pred_eval, "weighted")
 
+            roc_auc = None
+            if X_eval is not None:
+                try:
+                    probs = self.predict_proba(X_eval)
+                    if n_evaluated < n_total:
+                        probs = probs[valid_mask]
+                    roc_auc = _compute_roc_auc(y_true_eval, probs)
+                except Exception:
+                    roc_auc = None
+
+            if roc_auc is None:
+                try:
+                    roc_auc = _compute_roc_auc(y_true_eval, y_pred_eval)
+                except Exception:
+                    roc_auc = 0.5
+
             metrics = {
                 "accuracy": acc,
                 "f1_macro": f1_mac,
                 "f1_weighted": f1_w,
+                "roc_auc": round(float(roc_auc), 4) if roc_auc is not None else 0.5,
                 "coverage": coverage,
             }
             if verbose:
-                print(f"Accuracy: {acc:.4f} | F1 Macro: {f1_mac:.4f} | F1 Weighted: {f1_w:.4f}")
+                print(f"Accuracy: {acc:.4f} | F1 Macro: {f1_mac:.4f} | F1 Weighted: {f1_w:.4f} | ROC-AUC: {metrics['roc_auc']:.4f}")
             return metrics
         else:
             ss_res = np.sum((y_true_eval - y_pred_eval) ** 2)
