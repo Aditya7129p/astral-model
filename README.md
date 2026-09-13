@@ -414,7 +414,7 @@ If you use ASTRAL in academic research or industrial projects, please cite:
 ```bibtex
 @article{pandey2026astral,
   title   = {ASTRAL: Adaptive Spectral Resonance Decomposition and Invariant Risk Minimization for Interpretable Tabular Machine Learning},
-  author  = {Pandey, Aditya},
+  author  = {Aditya Pandey},
   journal = {Preprint},
   year    = {2026},
   url     = {https://github.com/Aditya7129p/astral-model}

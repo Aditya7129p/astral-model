@@ -76,3 +76,9 @@ test*.pdf
 *.tar.gz
 *.zip
 docs/figures/*.pdf
+setup.py
+MANIFEST.in
+build
+astral_model-*.tar.gz
+astral_model-*.whl
+astral_model.egg-info
