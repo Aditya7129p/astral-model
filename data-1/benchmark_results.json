@@ -1,0 +1,142 @@
+{
+  "dataset": "data-1 (House Prices)",
+  "task": "regression",
+  "n_samples": 1460,
+  "n_features": 79,
+  "raw_results": {
+    "AstralModel": {
+      "r2": 0.8425,
+      "rmse": 34757.37,
+      "mae": 19412.65,
+      "fit_time_s": 0.8775
+    },
+    "Ridge Regression": {
+      "r2": 0.8212,
+      "rmse": 37034.81,
+      "mae": 22156.6,
+      "fit_time_s": 0.0027
+    },
+    "Lasso Regression": {
+      "r2": 0.806,
+      "rmse": 38574.73,
+      "mae": 22442.19,
+      "fit_time_s": 0.0084
+    },
+    "ElasticNet": {
+      "r2": 0.834,
+      "rmse": 35685.83,
+      "mae": 21615.47,
+      "fit_time_s": 0.0503
+    },
+    "Random Forest": {
+      "r2": 0.8832,
+      "rmse": 29937.63,
+      "mae": 18181.92,
+      "fit_time_s": 0.1663
+    },
+    "Gradient Boosting": {
+      "r2": 0.9035,
+      "rmse": 27205.54,
+      "mae": 17083.8,
+      "fit_time_s": 0.6156
+    },
+    "HistGradientBoosting": {
+      "r2": 0.882,
+      "rmse": 30089.37,
+      "mae": 17331.09,
+      "fit_time_s": 0.3935
+    },
+    "LinearSVR": {
+      "r2": 0.7171,
+      "rmse": 46579.33,
+      "mae": 31333.14,
+      "fit_time_s": 0.0561
+    },
+    "K-Nearest Neighbors": {
+      "r2": 0.7036,
+      "rmse": 47680.2,
+      "mae": 28147.49,
+      "fit_time_s": 0.0006
+    },
+    "Decision Tree": {
+      "r2": 0.7931,
+      "rmse": 39838.94,
+      "mae": 26586.13,
+      "fit_time_s": 0.0328
+    },
+    "MLP Regressor": {
+      "r2": 0.1725,
+      "rmse": 79671.34,
+      "mae": 51452.32,
+      "fit_time_s": 0.2249
+    }
+  },
+  "scaled_results": {
+    "AstralModel": {
+      "r2": 0.8596,
+      "rmse": 32819.05,
+      "mae": 18413.68,
+      "fit_time_s": 1.2394
+    },
+    "Ridge Regression": {
+      "r2": 0.807,
+      "rmse": 38475.14,
+      "mae": 22421.5,
+      "fit_time_s": 0.002
+    },
+    "Lasso Regression": {
+      "r2": 0.806,
+      "rmse": 38575.42,
+      "mae": 22442.2,
+      "fit_time_s": 0.007
+    },
+    "ElasticNet": {
+      "r2": 0.8263,
+      "rmse": 36506.05,
+      "mae": 21910.37,
+      "fit_time_s": 0.0063
+    },
+    "Random Forest": {
+      "r2": 0.883,
+      "rmse": 29960.32,
+      "mae": 18195.05,
+      "fit_time_s": 0.1595
+    },
+    "Gradient Boosting": {
+      "r2": 0.9031,
+      "rmse": 27257.53,
+      "mae": 17110.82,
+      "fit_time_s": 0.5361
+    },
+    "HistGradientBoosting": {
+      "r2": 0.882,
+      "rmse": 30089.64,
+      "mae": 17332.89,
+      "fit_time_s": 0.3756
+    },
+    "LinearSVR": {
+      "r2": -4.1155,
+      "rmse": 198084.83,
+      "mae": 177671.81,
+      "fit_time_s": 0.0028
+    },
+    "K-Nearest Neighbors": {
+      "r2": 0.7824,
+      "rmse": 40857.65,
+      "mae": 24747.62,
+      "fit_time_s": 0.0003
+    },
+    "Decision Tree": {
+      "r2": 0.7933,
+      "rmse": 39814.21,
+      "mae": 26505.82,
+      "fit_time_s": 0.0316
+    },
+    "MLP Regressor": {
+      "r2": -4.158,
+      "rmse": 198905.5,
+      "mae": 178663.83,
+      "fit_time_s": 0.2165
+    }
+  }
+}

@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "astral-model"
+version = "0.2.0"
+description = "Adaptive Spectral Resonance Decomposition & Invariant Risk Minimization for Interpretable Tabular Machine Learning"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Aditya Pandey", email = "aditya9708p@gmail.com" }
+]
+maintainers = [
+    { name = "Aditya Pandey", email = "aditya9708p@gmail.com" }
+]
+keywords = [
+    "machine-learning",
+    "tabular-data",
+    "interpretable-ml",
+    "invariant-risk-minimization",
+    "spectral-resonance",
+    "causal-inference",
+    "conformal-prediction",
+    "scikit-learn"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.20.0",
+    "scipy>=1.7.0",
+]
+
+[project.optional-dependencies]
+all = [
+    "pandas>=1.3.0",
+    "scikit-learn>=1.0.0",
+    "matplotlib>=3.5.0",
+    "torch>=1.12.0",
+]
+torch = [
+    "torch>=1.12.0",
+]
+benchmark = [
+    "pandas>=1.3.0",
+    "scikit-learn>=1.0.0",
+    "xgboost>=1.6.0",
+    "lightgbm>=3.3.0",
+    "catboost>=1.0.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "build>=0.10.0",
+    "twine>=4.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Aditya7129p/astral-model"
+Documentation = "https://github.com/Aditya7129p/astral-model#readme"
+Repository = "https://github.com/Aditya7129p/astral-model.git"
+Issues = "https://github.com/Aditya7129p/astral-model/issues"
+
+[tool.setuptools]
+packages = ["astral"]
+py-modules = ["astral_model"]

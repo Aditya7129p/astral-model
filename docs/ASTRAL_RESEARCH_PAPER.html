@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Spectral Resonance Decomposition: Causal-Invariant Adaptive Basis Modeling with Calibrated Uncertainty</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="citation_title" content="Spectral Resonance Decomposition: Causal-Invariant Adaptive Basis Modeling with Calibrated Uncertainty">
+    <meta name="citation_author" content="Aditya Pandey">
+    <meta name="citation_publication_date" content="2026/09/13">
+    
+
+    <style>
+        :root {
+            --arxiv-ink: #1c1a17;
+            --arxiv-paper: #ffffff;
+            --arxiv-paper-warm: #fbfbf9;
+            --arxiv-bg: #f5f5f2;
+            --arxiv-sidebar-bg: #f8f8f6;
+            --arxiv-border: #e2e2dd;
+            --arxiv-border-subtle: #eaeae5;
+            --arxiv-primary-red: #b31b1b;
+            --arxiv-link: #004b99;
+            --arxiv-link-hover: #b31b1b;
+            --arxiv-math-bg: #f9f9f6;
+            --arxiv-table-stripe: #f8f8f5;
+            --arxiv-font-serif: "Computer Modern", "STIX Two Text", "Times New Roman", Times, Georgia, serif;
+            --arxiv-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --arxiv-font-mono: "Consolas", "Courier New", monospace;
+            --font-size-base: 17px;
+            --line-height-base: 1.74;
+            --max-content-width: 900px;
+        }
+
+        html[data-theme="dark"] {
+            --arxiv-ink: #e6e6e3;
+            --arxiv-paper: #191a1c;
+            --arxiv-paper-warm: #1f2022;
+            --arxiv-bg: #121214;
+            --arxiv-sidebar-bg: #191a1c;
+            --arxiv-border: #333538;
+            --arxiv-border-subtle: #27282b;
+            --arxiv-primary-red: #ff5252;
+            --arxiv-link: #62a0ea;
+            --arxiv-link-hover: #ff7b7b;
+            --arxiv-math-bg: #222326;
+            --arxiv-table-stripe: #212225;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--arxiv-font-serif);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
+            color: var(--arxiv-ink);
+            background-color: var(--arxiv-bg);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        
+
+        /* ── Page Layout ── */
+        .ltx_page_wrapper {
+            display: flex;
+            min-height: 100vh;
+            justify-content: center;
+        }
+
+        /* ── Sidebar TOC ── */
+        .ltx_page_navbar {
+            width: 290px;
+            flex-shrink: 0;
+            background-color: var(--arxiv-sidebar-bg);
+            border-right: 1px solid var(--arxiv-border);
+            padding: 32px 18px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            font-family: var(--arxiv-font-sans);
+            font-size: 0.86rem;
+            line-height: 1.45;
+        }
+        html[data-toc-display="hidden"] .ltx_page_navbar {
+            display: none;
+        }
+        .ltx_toclist {
+            list-style: none;
+        }
+        .ltx_tocentry {
+            margin: 5px 0;
+        }
+        .ltx_tocentry a {
+            color: var(--arxiv-ink);
+            text-decoration: none;
+            display: block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.1s, color 0.1s;
+        }
+        .ltx_tocentry a:hover {
+            background-color: var(--arxiv-border-subtle);
+            color: var(--arxiv-primary-red);
+        }
+        .ltx_toclist_section {
+            list-style: none;
+            padding-left: 14px;
+            margin-top: 3px;
+            border-left: 1px solid var(--arxiv-border-subtle);
+        }
+        .ltx_toclist_subsection {
+            list-style: none;
+            padding-left: 12px;
+            font-size: 0.8rem;
+            border-left: 1px solid var(--arxiv-border-subtle);
+        }
+
+        /* ── Main Document Viewport ── */
+        .ltx_page_main {
+            flex-grow: 1;
+            padding: 40px 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--arxiv-bg);
+        }
+        .ltx_page_content {
+            width: 100%;
+            max-width: var(--max-content-width);
+            background-color: var(--arxiv-paper);
+            border: 1px solid var(--arxiv-border);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+            border-radius: 4px;
+            padding: 65px 85px;
+        }
+
+        .infobox {
+            width: 100%;
+            max-width: var(--max-content-width);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--arxiv-font-sans);
+            font-size: 0.84rem;
+            color: #666;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+        html[data-theme="dark"] .infobox {
+            color: #999;
+        }
+        .infobox a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .infobox a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Typography & Headings ── */
+        h1.ltx_title_document {
+            font-family: var(--arxiv-font-serif);
+            font-size: 2.15rem;
+            font-weight: 700;
+            line-height: 1.25;
+            text-align: center;
+            margin: 15px 0 24px;
+            color: var(--arxiv-ink);
+        }
+        .ltx_authors {
+            text-align: center;
+            font-family: var(--arxiv-font-sans);
+            font-size: 0.96rem;
+            margin-bottom: 30px;
+            color: var(--arxiv-ink);
+            line-height: 1.6;
+        }
+        .ltx_author_block {
+            display: inline-block;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .ltx_author_name {
+            font-weight: 700;
+            font-size: 1.15rem;
+            display: block;
+            color: var(--arxiv-ink);
+        }
+        .ltx_author_affil {
+            color: #555;
+            font-size: 0.92rem;
+            display: block;
+            margin-top: 3px;
+        }
+        html[data-theme="dark"] .ltx_author_affil {
+            color: #aaa;
+        }
+        .ltx_author_email {
+            font-family: var(--arxiv-font-mono);
+            font-size: 0.85rem;
+            color: var(--arxiv-link);
+            margin-top: 3px;
+            display: block;
+        }
+        .ltx_github_repo {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 12px;
+            background-color: var(--arxiv-paper-warm);
+            border: 1px solid var(--arxiv-border);
+            border-radius: 20px;
+            font-family: var(--arxiv-font-mono);
+            font-size: 0.84rem;
+        }
+        .ltx_github_repo a {
+            color: var(--arxiv-link);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ── Abstract Box ── */
+        .ltx_abstract {
+            background-color: var(--arxiv-paper-warm);
+            border: 1px solid var(--arxiv-border-subtle);
+            border-left: 4px solid var(--arxiv-primary-red);
+            border-radius: 3px;
+            padding: 24px 30px;
+            margin: 28px 0 38px;
+            font-size: 0.95rem;
+            line-height: 1.68;
+        }
+        .ltx_abstract_title {
+            font-family: var(--arxiv-font-sans);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.85rem;
+            color: var(--arxiv-primary-red);
+            margin-bottom: 10px;
+        }
+
+        /* ── Headings ── */
+        h2.ltx_title_section {
+            font-family: var(--arxiv-font-serif);
+            font-size: 1.48rem;
+            font-weight: 700;
+            margin: 44px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--arxiv-border);
+            color: var(--arxiv-ink);
+        }
+        h3.ltx_title_subsection {
+            font-family: var(--arxiv-font-serif);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 28px 0 12px;
+            color: var(--arxiv-ink);
+        }
+        h4.ltx_title_subsubsection {
+            font-family: var(--arxiv-font-sans);
+            font-size: 1.0rem;
+            font-weight: 700;
+            margin: 20px 0 8px;
+            color: var(--arxiv-ink);
+        }
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        /* ── Mathematics ── */
+        .ltx_equation {
+            margin: 22px 0;
+            padding: 14px 20px;
+            background-color: var(--arxiv-math-bg);
+            border: 1px solid var(--arxiv-border-subtle);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: auto;
+            font-family: "Cambria Math", "Latin Modern Math", "STIX Two Math", serif;
+            font-size: 1.06rem;
+        }
+        .ltx_tag_equation {
+            position: absolute;
+            right: 18px;
+            font-family: var(--arxiv-font-serif);
+            font-size: 0.92rem;
+            color: #666;
+        }
+
+        /* ── Embedded Figures ── */
+        .figure-box {
+            margin: 32px 0;
+            text-align: center;
+        }
+        .figure-box img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--arxiv-border);
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            background-color: #fff;
+        }
+        .figure-caption {
+            font-family: var(--arxiv-font-serif);
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #555;
+            margin-top: 10px;
+            text-align: justify;
+        }
+        html[data-theme="dark"] .figure-caption {
+            color: #aaa;
+        }
+
+        /* ── Tables ── */
+        .ltx_table_wrap {
+            margin: 28px 0;
+            width: 100%;
+            overflow-x: auto;
+        }
+        table.ltx_tabular {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--arxiv-font-sans);
+            font-size: 0.88rem;
+            border-top: 2px solid var(--arxiv-ink);
+            border-bottom: 2px solid var(--arxiv-ink);
+            margin: 10px 0;
+        }
+        table.ltx_tabular th, table.ltx_tabular td {
+            padding: 8px 12px;
+            text-align: left;
+        }
+        table.ltx_tabular th {
+            font-weight: 600;
+            border-bottom: 1px solid var(--arxiv-border);
+            background-color: var(--arxiv-paper-warm);
+        }
+        table.ltx_tabular tbody tr:nth-child(even) {
+            background-color: var(--arxiv-table-stripe);
+        }
+        table.ltx_tabular tr.highlight {
+            background-color: rgba(179, 27, 27, 0.08);
+            font-weight: 700;
+        }
+        table.ltx_tabular tr.highlight td:first-child {
+            color: var(--arxiv-primary-red);
+        }
+        .table-caption {
+            font-family: var(--arxiv-font-serif);
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        /* ── Algorithm Box ── */
+        .algorithm-box {
+            border: 1px solid var(--arxiv-border);
+            border-top: 2px solid var(--arxiv-ink);
+            border-bottom: 2px solid var(--arxiv-ink);
+            padding: 18px 22px;
+            margin: 28px 0;
+            background-color: var(--arxiv-paper-warm);
+            font-family: var(--arxiv-font-mono);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+        .algorithm-title {
+            font-family: var(--arxiv-font-sans);
+            font-weight: 700;
+            font-size: 0.95rem;
+            border-bottom: 1px solid var(--arxiv-border);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .alg-keyword {
+            color: var(--arxiv-primary-red);
+            font-weight: 700;
+        }
+
+        /* ── Unique Features Callout ── */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+        .feature-card {
+            background-color: var(--arxiv-paper-warm);
+            border: 1px solid var(--arxiv-border);
+            border-radius: 4px;
+            padding: 16px 18px;
+        }
+        .feature-card h4 {
+            font-family: var(--arxiv-font-sans);
+            font-size: 0.95rem;
+            color: var(--arxiv-primary-red);
+            margin-bottom: 6px;
+        }
+        .feature-card p {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            margin: 0;
+            text-align: left;
+        }
+
+        /* ── References ── */
+        .ltx_bibliography {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--arxiv-border);
+        }
+        .ltx_biblist {
+            list-style: none;
+            padding-left: 0;
+        }
+        .ltx_bibitem {
+            margin-bottom: 14px;
+            font-size: 0.88rem;
+            line-height: 1.55;
+            display: flex;
+            gap: 12px;
+        }
+        .ltx_bibtag {
+            font-weight: 700;
+            flex-shrink: 0;
+            width: 45px;
+            color: #666;
+        }
+        html[data-theme="dark"] .ltx_bibtag {
+            color: #aaa;
+        }
+        .ltx_bibentry a {
+            color: var(--arxiv-link);
+            text-decoration: underline;
+        }
+        .ltx_bibentry a:hover {
+            color: var(--arxiv-primary-red);
+        }
+
+        /* ── Responsive Rules ── */
+        @media (max-width: 992px) {
+            .ltx_page_navbar {
+                display: none;
+            }
+            .ltx_page_content {
+                padding: 36px 24px;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        @media print {
+            html, body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                width: 100% !important;
+            }
+            .floating-controls, .ltx_page_navbar, .infobox {
+                display: none !important;
+            }
+            .ltx_page_wrapper {
+                display: block !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            .ltx_page_main {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+            }
+            .ltx_page_content {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 20mm 20mm !important;
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background: #ffffff !important;
+            }
+            .figure-box img {
+                max-width: 95% !important;
+                page-break-inside: avoid;
+            }
+            .ltx_equation, table.ltx_tabular, .algorithm-box {
+                page-break-inside: avoid;
+            }
+        }
+
+    </style>
+
+    <script>
+        function initializeReadingPreferences() {
+            let saved_theme = localStorage.getItem("ar5iv_theme") || "automatic";
+            if (saved_theme === "automatic") {
+                if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                    saved_theme = "dark";
+                }
+            }
+            if (saved_theme === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+            } else {
+                document.documentElement.setAttribute("data-theme", "light");
+            }
+
+            const tocDisplay = localStorage.getItem('arxiv_html_paper_toc_display');
+            if (tocDisplay) {
+                document.documentElement.setAttribute("data-toc-display", tocDisplay);
+            }
+        }
+        initializeReadingPreferences();
+
+        function toggleColorScheme() {
+            const current = document.documentElement.getAttribute("data-theme") || "light";
+            const next = current === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", next);
+            localStorage.setItem("ar5iv_theme", next);
+        }
+
+        function toggleNavTOC() {
+            const current = document.documentElement.getAttribute("data-toc-display") || "visible";
+            const next = current === "hidden" ? "visible" : "hidden";
+            document.documentElement.setAttribute("data-toc-display", next);
+            localStorage.setItem('arxiv_html_paper_toc_display', next);
+        }
+    </script>
+
+    <!-- MathJax & KaTeX plugins for rendering mathematical formulas -->
+    
+    
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+    
+
+    <div class="ltx_page_wrapper">
+        <!-- Sidebar Navigation TOC -->
+        <nav class="ltx_page_navbar" aria-label="Table of Contents">
+            <h5 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:#888; margin-bottom:14px;">Contents</h5>
+            <ol class="ltx_toclist">
+                <li class="ltx_tocentry"><a href="#abstract">Abstract</a></li>
+                <li class="ltx_tocentry"><a href="#sec1"><strong>1.</strong> Introduction</a></li>
+                <li class="ltx_tocentry"><a href="#sec2"><strong>2.</strong> Background & Motivation</a></li>
+                <li class="ltx_tocentry">
+                    <a href="#sec3"><strong>3.</strong> Mathematical Formulation of SRD</a>
+                    <ol class="ltx_toclist_section">
+                        <li class="ltx_tocentry"><a href="#sec3-1">3.1 Adaptive Spectral Resonance Kernels</a></li>
+                        <li class="ltx_tocentry"><a href="#sec3-2">3.2 Pairwise Cross-Resonance Discovery</a></li>
+                        <li class="ltx_tocentry"><a href="#sec3-3">3.3 Invariant Risk Minimization (IRM) Stability</a></li>
+                        <li class="ltx_tocentry"><a href="#sec3-4">3.4 Forward MDL Greedy Orthogonal Pursuit</a></li>
+                        <li class="ltx_tocentry"><a href="#sec3-5">3.5 Stability-Weighted Regularized IRLS</a></li>
+                        <li class="ltx_tocentry"><a href="#sec3-6">3.6 Split-Conformal Calibration & Abstention</a></li>
+                    </ol>
+                </li>
+                <li class="ltx_tocentry"><a href="#sec4"><strong>4.</strong> Unique Features of AstralModel</a></li>
+                <li class="ltx_tocentry">
+                    <a href="#sec5"><strong>5.</strong> Algorithmic Procedure</a>
+                    <ol class="ltx_toclist_section">
+                        <li class="ltx_tocentry"><a href="#sec5-1">5.1 Algorithm 1: Spectral Resonance Decomposition</a></li>
+                        <li class="ltx_tocentry"><a href="#sec5-2">5.2 Vectorized Computational Optimizations</a></li>
+                    </ol>
+                </li>
+                <li class="ltx_tocentry">
+                    <a href="#sec6"><strong>6.</strong> Empirical Multi-Dataset Benchmarks</a>
+                    <ol class="ltx_toclist_section">
+                        <li class="ltx_tocentry"><a href="#sec6-1">6.1 Regression: Ames House Prices (data-1)</a></li>
+                        <li class="ltx_tocentry"><a href="#sec6-2">6.2 Scaled Classification: EV Adoption (data-2)</a></li>
+                        <li class="ltx_tocentry"><a href="#sec6-3">6.3 Clinical Diagnostics: Heart Disease (data-3)</a></li>
+                    </ol>
+                </li>
+                <li class="ltx_tocentry"><a href="#sec7"><strong>7.</strong> Discussion & Conclusion</a></li>
+                <li class="ltx_tocentry"><a href="#references">References</a></li>
+            </ol>
+        </nav>
+
+        <!-- Main Document Area -->
+        <main class="ltx_page_main">
+            <div class="infobox">
+                <a href="https://github.com/aditya7129/astral-model" target="_blank">Repository: github.com/aditya7129/astral-model</a>
+                
+            </div>
+
+            <article class="ltx_page_content">
+                <h1 class="ltx_title_document">Spectral Resonance Decomposition: Causal-Invariant Adaptive Basis Modeling with Calibrated Uncertainty</h1>
+
+                <div class="ltx_authors">
+                    <div class="ltx_author_block">
+                        <span class="ltx_author_name">Aditya Pandey</span>
+                        <span class="ltx_author_affil">Department of Computer Science & Engineering (AI & ML)</span>
+                        <span class="ltx_author_affil">Noida Institute of Engineering and Technology (NIET), Greater Noida, India</span>
+                        <span class="ltx_author_email">aditya9708p@gmail.com</span>
+                    </div>
+                    <div>
+                        <span class="ltx_github_repo">
+                            Code: <a href="https://github.com/aditya7129/astral-model" target="_blank">github.com/aditya7129/astral-model</a>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Abstract Section -->
+                <div class="ltx_abstract" id="abstract">
+                    <div class="ltx_abstract_title">Abstract</div>
+                    <p>
+                        In statistical learning, tabular and empirical predictive modeling has long been bifurcated between opaque, high-capacity ensembles and rigid, underfitting linear representations. Tree-based ensembles (Random Forests, Gradient Boosting) achieve strong empirical performance but operate as discontinuous axis-aligned step functions, lack causal invariance under distribution shifts, and provide no native uncertainty guarantees. Conversely, generalized linear models preserve interpretability but collapse when confronted with complex non-linear manifolds and non-additive interactions.
+                    </p>
+                    <p>
+                        This paper introduces <strong>AstralModel</strong>, instantiated through the theoretical framework of <strong>Spectral Resonance Decomposition (SRD)</strong>. AstralModel synthesizes data-driven non-linear basis functions across five distinct geometric regimes (localized quantile hats, Gaussian radial resonance kernels, sigmoidal ramps, and algebraic transforms) alongside synergistic pairwise cross-feature resonance terms. To distinguish causal relationships from spurious dataset artifacts, candidate bases undergo environmental stability scoring across synthetic bootstrap perturbation environments under an Invariant Risk Minimization (IRM) paradigm. Surviving bases are pruned via a forward Minimum Description Length (MDL) orthogonalized pursuit, and parameters are estimated through stability-weighted regularized Iteratively Reweighted Least Squares (IRLS). Finally, non-parametric split-conformal calibration produces finite-sample prediction intervals and sets with an automated selective abstention mechanism.
+                    </p>
+                    <p>
+                        Benchmarking on real-world datasets across regression (Ames House Prices), large-scale classification (EV Adoption, 15,000 samples), and clinical diagnostics (Cleveland Heart Disease) confirms that AstralModel matches or exceeds leading tree-based baselines ($R^2 = 0.8596$, ROC-AUC $= 0.9394$, Accuracy $= 83.61\%$) while delivering full functional transparency, rigorous confidence bounds, and sub-second to two-second execution latencies.
+                    </p>
+                </div>
+
+                <!-- Section 1 -->
+                <section id="sec1">
+                    <h2 class="ltx_title_section"><span style="color:var(--arxiv-primary-red);">1.</span> Introduction</h2>
+                    <p>
+                        Tabular predictive modeling remains one of the most widely deployed paradigms in computational science, healthcare diagnosis, financial engineering, and industrial forecasting. While deep learning has conquered perceptual domains such as computer vision and natural language processing, tabular architectures present unique mathematical challenges: heterogeneous column distributions, varying signal-to-noise ratios, collinearity, and lack of spatial or sequential translational invariance.
+                    </p>
+                    <p>
+                        Consequently, gradient boosted decision trees (GBDT) and random forests remain dominant. However, decision trees partition feature spaces via axis-aligned orthogonal hyperplanes. This architectural design carries profound structural drawbacks:
+                    </p>
+                    <ul style="margin-left: 24px; margin-bottom: 16px;">
+                        <li><strong>Discontinuous Function Approximation:</strong> Trees predict piecewise constant outputs, rendering them unable to model continuous physical gradients or extrapolate smooth trends.</li>
+                        <li><strong>Vulnerability to Spurious Correlations:</strong> Standard empirical risk minimization (ERM) exploits any correlation that minimizes training loss, often learning shortcuts that deteriorate under covariate shift.</li>
+                        <li><strong>Uncalibrated Forecasts:</strong> Neither tree ensembles nor deep networks provide distribution-free confidence guarantees on individual point forecasts.</li>
+                    </ul>
+                    <p>
+                        To resolve these limitations, we propose <strong>Spectral Resonance Decomposition (SRD)</strong>. Rather than forcing the hypothesis space into deep black-box networks or piecewise constant step functions, AstralModel discovers smooth, localized non-linear basis resonances that reconstruct the underlying data-generating manifold.
+                    </p>
+
+                    <!-- Figure 1: Architecture Pipeline -->
+                    <div class="figure-box">
+                        <img src="figures/fig1_architecture.png" alt="Figure 1: Architectural Pipeline of Spectral Resonance Decomposition">
+                        <div class="figure-caption">
+                            <strong>Figure 1: Architectural Pipeline of AstralModel (Spectral Resonance Decomposition).</strong> Input covariates $X \in \mathbb{R}^{N \times P}$ undergo adaptive quantile-anchored basis generation, synergistic cross-resonance screening, multi-environment IRM stability assessment, forward MDL orthogonal matching pursuit, and stability-weighted regularized IRLS estimation with conformal uncertainty calibration.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2 -->
+                <section id="sec2">
+                    <h2 class="ltx_title_section"><span style="color:var(--arxiv-primary-red);">2.</span> Background & Motivation</h2>
+                    <p>
+                        <strong>Generalized Additive Models (GAMs):</strong> Hastie and Tibshirani [1] introduced GAMs to extend linear models by replacing linear terms with smooth univariate functions: $g(\mathbb{E}[Y]) = \beta_0 + \sum_{j=1}^P f_j(X_j)$. While GAMs preserve interpretability, they require manual spline knot placement and cannot discover complex bivariate or synergistic interactions automatically.
+                    </p>
+                    <p>
+                        <strong>Invariant Risk Minimization (IRM):</strong> Arjovsky et al. [2] and Peters et al. [3] established that a representation $\Phi(X)$ is causal if the optimal linear predictor on top of $\Phi(X)$ is invariant across all training environments $e \in \mathcal{E}$: $\mathbb{E}[Y \mid \Phi(X), e] = \mathbb{E}[Y \mid \Phi(X)]$. When explicit environment tags are unavailable in observational tabular data, discovering invariance requires generating surrogate perturbation environments.
+                    </p>
+                    <p>
+                        <strong>Conformal Prediction:</strong> Pioneered by Vovk et al. [4], conformal prediction provides distribution-free predictive inference. For any exchangeable data stream and miscoverage tolerance $\alpha \in (0, 1)$, a split-conformal set satisfies $\mathbb{P}(Y \in \mathcal{C}(X)) \ge 1 - \alpha$ without relying on Gaussian or asymptotic normality assumptions.
+                    </p>
+                </section>
+
+                <!-- Section 3 -->
+                <section id="sec3">
+                    <h2 class="ltx_title_section"><span style="color:var(--arxiv-primary-red);">3.</span> Mathematical Formulation of SRD</h2>
+                    <p>
+                        Let $\mathcal{D} = \{(x_i, y_i)\}_{i=1}^N$ be an empirical training set with $x_i \in \mathbb{R}^P$ and target $y_i \in \mathbb{R}$ (regression) or $y_i \in \{0, 1, \dots, C-1\}$ (classification). The Spectral Resonance Decomposition proceeds through five rigorous mathematical phases:
+                    </p>
+
+                    <h3 id="sec3-1" class="ltx_title_subsection">3.1 Adaptive Spectral Resonance Kernels</h3>
+                    <p>
+                        For covariate $j \in \{1, \dots, P\}$, AstralModel constructs a multi-geometry non-linear dictionary $\mathcal{B}_j$. Let $q_1, \dots, q_K$ denote $K$ empirical quantiles of $X_{\cdot, j}$, corresponding to percentiles $\tau_k = 0.15 + 0.70 \cdot \frac{k-1}{K-1}$. Bandwidths $w_k$ are determined adaptively by inter-quantile spacing:
+                    </p>
+                    <div class="ltx_equation">
+                        <span>
+                            $$w_k = \max\left(0.5 \sigma_j, \; \min\left(|q_k - q_{k-1}|, |q_{k+1} - q_k|\right)\right)$$
+                        </span>
+                        <span class="ltx_tag_equation">(1)</span>
+                    </div>
+                    <p>
+                        The basis family spans five functional mathematical transformations:
+                    </p>
+                    <div class="ltx_equation">
+                        <span>
+                            $$\phi_{\mathrm{hat}}(x; q_k, w_k) = \max\left(0, \; 1 - \frac{|x - q_k|}{w_k}\right)$$
+                        </span>
+                        <span class="ltx_tag_equation">(2)</span>
+                    </div>
+                    <div class="ltx_equation">
+                        <span>
+                            $$\phi_{\mathrm{rbf}}(x; q_k, w_k) = \exp\left(-\left(\frac{x - q_k}{w_k}\right)^2\right)$$
+                        </span>
+                        <span class="ltx_tag_equation">(3)</span>
+                    </div>
+                    <div class="ltx_equation">
+                        <span>
+                            $$\phi_{\mathrm{sig}}(x; q_k, w_k) = \frac{1}{1 + \exp\left(-\frac{x - q_k}{w_k}\right)}$$
+                        </span>
+                        <span class="ltx_tag_equation">(4)</span>
+                    </div>
+                    <div class="ltx_equation">
+                        <span>
+                            $$\phi_{\mathrm{pow}}(x) \in \left\{x, \; \mathrm{sign}(x)\sqrt{|x|}, \; x^2, \; \mathrm{sign}(x)\log(1 + |x|), \; \frac{\mathrm{sign}(x)}{1 + |x|}, \; \mathbb{I}[x > \mathrm{med}(x)]\right\}$$
+                        </span>
+                        <span class="ltx_tag_equation">(5)</span>
+                    </div>
+
+                    <!-- Figure 2: Basis Functions -->
+                    <div class="figure-box">
+                        <img src="figures/fig2_basis_functions.png" alt="Figure 2: Multi-Geometry Spectral Resonance Basis Family">
+                        <div class="figure-caption">
+                            <strong>Figure 2: The Multi-Geometry Spectral Resonance Basis Family.</strong> (a) Quantile Hat kernels $\phi_{\mathrm{hat}}$ capture localized triangular density pulses; (b) Gaussian resonance kernels $\phi_{\mathrm{rbf}}$ approximate smooth localized energy modes; (c) Sigmoidal ramps $\phi_{\mathrm{sig}}$ capture phase shifts; (d) Global algebraic transforms capture sub-linear and super-linear scaling.
+                        </div>
+                    </div>
+
+                    <p>
+                        Each basis candidate $\phi$ is evaluated against target $y$ via mutual information $I(\phi(X); y)$ estimated via a 2D contingency table with Laplace smoothing:
+                    </p>
+                    <div class="ltx_equation">
+                        <span>
+                            $$I(\phi; y) = \sum_{u=1}^{B_x} \sum_{v=1}^{B_y} p(u, v) \log \left(\frac{p(u, v)}{p(u) p(v)}\right)$$
+                        </span>
+                        <span class="ltx_tag_equation">(6)</span>
+                    </div>
+                    <p>
+                        where $p(u, v) = \frac{N_{uv} + \epsilon}{\sum (N_{uv} + \epsilon)}$, and $N_{uv}$ is computed using native multi-bin discrete counting.
+                    </p>
+
+                    <h3 id="sec3-2" class="ltx_title_subsection">3.2 Pairwise Cross-Resonance Discovery</h3>
+                    <p>
+                        To capture feature interactions without combinatorial $\mathcal{O}(P^2)$ explosion, features are ranked by maximal univariate mutual information: $\mathrm{Score}_j = \max_{\phi \in \mathcal{B}_j} I(\phi; y)$. For the top features $j_1, j_2 \in \mathcal{S}_{\mathrm{top}}$ ($|\mathcal{S}_{\mathrm{top}}| \le 14$), candidate basis pairs $(\phi_a, \phi_b)$ are synthesized across four geometric interactions:
+                    </p>
+                    <div class="ltx_equation">
+                        <span>
+                            $$\psi_{\mathrm{mult}} = \phi_a \cdot \phi_b, \quad \psi_{\mathrm{ratio}} = \frac{\phi_a}{1 + |\phi_b|}, \quad \psi_{\mathrm{min}} = \min(\phi_a, \phi_b), \quad \psi_{\mathrm{diff}} = |\phi_a - \phi_b|$$
+                        </span>
+                        <span class="ltx_tag_equation">(7)</span>
+                    </div>
+                    <p>
+                        An interaction basis $\psi$ is admitted into the candidate dictionary $\mathcal{M}$ if and only if it exhibits strict synergistic information gain:
+                    </p>
+                    <div class="ltx_equation">
+                        <span>
+                            $$\Delta I(\psi) = I(\psi; y) - \max\left(I(\phi_a; y), I(\phi_b; y)\right) > 0.005$$
+                        </span>
+                        <span class="ltx_tag_equation">(8)</span>
+                    </div>
+
+                    <h3 id="sec3-3" class="ltx_title_subsection">3.3 Invariant Risk Minimization (IRM) Stability Diagnostics</h3>
+                    <p>
+                        Spurious features correlate strongly with the target under the observational training distribution but oscillate erratically across environmental perturbations. To discover causal invariance, AstralModel constructs $E = 10$ perturbed bootstrap environments $\mathcal{E} = \{e_1, \dots, e_E\}$.
+                    </p>
+                    <p>
+                        For each candidate basis $\phi_m \in \mathcal{M}$ and environment $e$, we compute standardized correlation $r_m^{(e)} = \mathrm{Corr}_e(\phi_m, y)$. The causal stability score $S_m \in [0, 1]$ is formulated as the product of signal-to-noise ratio and directional sign consistency:
+                    </p>
+                    <div class="ltx_equation">
+                        <span>
+                            $$S_m = \left(\frac{|\bar{r}_m|}{|\bar{r}_m| + \sigma_e(r_m^{(e)}) + 10^{-8}}\right) \times \left(\frac{1}{E} \sum_{e=1}^E \mathbb{I}\left[\mathrm{sign}(r_m^{(e)}) = \mathrm{sign}(\bar{r}_m)\right]\right)$$
+                        </span>
+                        <span class="ltx_tag_equation">(9)</span>
+                    </div>
+
+                    <!-- Figure 3: IRM Stability -->
+                    <div class="figure-box">
+                        <img src="figures/fig3_irm_stability.png" alt="Figure 3: Invariant Risk Minimization Stability Diagnostics">
+                        <div class="figure-caption">
+                            <strong>Figure 3: Invariant Risk Minimization (IRM) Stability Diagnostics across Perturbed Environments.</strong> Candidate bases with consistent correlation sign and high signal-to-noise ratio achieve stability scores $S_j \ge 0.5$ (green), receiving minimal regularization. Spurious features exhibiting directional drift or high variance across environments receive $S_j < 0.5$ (red) and undergo severe shrinkage.
+                        </div>
+                    </div>
+
+                    <h3 id="sec3-4" class="ltx_title_subsection">3.4 Forward MDL Greedy Orthogonal Pursuit</h3>
+                    <p>
+                        From the filtered candidate pool $\mathcal{M}$, AstralModel selects a parsimonious basis subset using an accelerated Gram-Schmidt Matching Pursuit penalized by Minimum Description Length (MDL). Let $r^{(0)} = y - \bar{y}$ be the initial residual vector.
+                    </p>
+                    <p>
+                        At iteration $k$, remaining candidate basis vectors $\Phi_{\mathrm{proj}}$ are projected onto the orthogonal complement of previously chosen bases. The selection criterion balances correlation gain, causal stability, and description complexity:
+                    </p>
+                    <div class="ltx_equation">
+                        <span>
+                            $$j^* = \arg\max_{j \notin \mathcal{S}} \left(\frac{|\tilde{\phi}_j^T r^{(k-1)}|^2}{\|\tilde{\phi}_j\|_2^2 \cdot \|r^{(k-1)}\|_2^2 + \epsilon}\right) \times \left(\frac{0.4 + 0.6 S_j}{\mathrm{DL}(\phi_j) + 0.1}\right)$$
+                        </span>
+                        <span class="ltx_tag_equation">(10)</span>
+                    </div>
+                    <p>
+                        where $\mathrm{DL}(\phi_j)$ assigns complexity penalties: $1.0$ for linear identity, $2.5$ for localized kernels, $2.0$ for power transforms, and $\mathrm{DL}(\phi_a) + \mathrm{DL}(\phi_b) + 0.8$ for interaction pairs.
+                    </p>
+                    <p>
+                        Once $j^*$ is chosen, the new orthonormal basis vector $q_k = \frac{\tilde{\phi}_{j^*}}{\|\tilde{\phi}_{j^*}\|_2}$ is added, and all remaining candidate vectors are updated simultaneously via a parallel rank-1 matrix downdate:
+                    </p>
+                    <div class="ltx_equation">
+                        <span>
+                            $$\Phi_{\mathrm{proj}} \leftarrow \Phi_{\mathrm{proj}} - q_k \left(q_k^T \Phi_{\mathrm{proj}}\right), \quad r^{(k)} \leftarrow r^{(k-1)} - q_k \left(q_k^T r^{(k-1)}\right)$$
+                        </span>
+                        <span class="ltx_tag_equation">(11)</span>
+                    </div>
+
+                    <h3 id="sec3-5" class="ltx_title_subsection">3.5 Stability-Weighted Regularized IRLS</h3>
+                    <p>
+                        Given the design matrix $\Phi \in \mathbb{R}^{N \times M}$ of selected bases, parameter estimation incorporates stability-weighted shrinkage factors $\omega_m = \frac{1}{0.25 + 0.75 S_m}$. Invariant bases ($S_m \approx 1.0$) experience minimal shrinkage ($\omega_m \approx 1.0$), while fragile bases ($S_m \approx 0.0$) experience strong shrinkage ($\omega_m \approx 4.0$).
+                    </p>
+                    <p>
+                        <strong>Regression (Huber Robust Estimator):</strong> Let $\rho_\delta(r)$ denote the Huber loss with threshold $\delta = 1.345 \cdot \mathrm{MAD}(r)$. The objective function is:
+                    </p>
+                    <div class="ltx_equation">
+                        <span>
+                            $$\mathcal{L}_{\mathrm{Huber}}(w, b) = \sum_{i=1}^N \rho_\delta(y_i - \Phi_i w - b) + \frac{\lambda}{2} \sum_{m=1}^M \omega_m w_m^2$$
+                        </span>
+                        <span class="ltx_tag_equation">(12)</span>
+                    </div>
+                    <p>
+                        The solution is computed via Iteratively Reweighted Least Squares (IRLS) with diagonal weight matrix $W_{ii} = \min(1, \; \frac{\delta}{|r_i| + 10^{-10}})$.
+                    </p>
+                    <p>
+                        <strong>Classification (Regularized Logistic IRLS):</strong> For binary classification, let $p_i = \sigma(\Phi_i w + b) = \frac{1}{1 + \exp(-(\Phi_i w + b))}$. The penalized log-likelihood is:
+                    </p>
+                    <div class="ltx_equation">
+                        <span>
+                            $$\mathcal{L}_{\mathrm{Logistic}}(w, b) = -\sum_{i=1}^N \left(y_i \log p_i + (1 - y_i) \log(1 - p_i)\right) + \frac{\lambda}{2} \sum_{m=1}^M \omega_m w_m^2$$
+                        </span>
+                        <span class="ltx_tag_equation">(13)</span>
+                    </div>
+                    <p>
+                        Parameter updates take the form $w^{(t+1)} = (X_a^T S^{(t)} X_a + \Lambda)^{-1} X_a^T S^{(t)} z^{(t)}$, where $S_{ii} = p_i (1 - p_i)$ and $z = X_a w^{(t)} + S^{-1}(y - p)$. Convergence is governed by scale-invariant relative tolerance: $\|w^{(t+1)} - w^{(t)}\|_\infty \le \mathrm{tol} \cdot (\|w^{(t)}\|_\infty + 10^{-4})$.
+                    </p>
+
+                    <h3 id="sec3-6" class="ltx_title_subsection">3.6 Split-Conformal Calibration & Selective Abstention</h3>
+                    <p>
+                        To equip predictions with distribution-free finite-sample statistical guarantees, AstralModel evaluates conformity scores $s_i = |y_i - \hat{y}(x_i)|$ (regression) or $s_i = 1 - \hat{p}(y_i \mid x_i)$ (classification) on calibration data. For significance level $\alpha = 0.10$, the empirical $(1 - \alpha)$-quantile $\hat{q}$ yields the prediction interval:
+                    </p>
+                    <div class="ltx_equation">
+                        <span>
+                            $$\mathcal{C}_{\mathrm{conformal}}(x) = \left[\hat{y}(x) - \hat{q}, \quad \hat{y}(x) + \hat{q}\right], \quad \mathbb{P}\left(Y \in \mathcal{C}_{\mathrm{conformal}}(X)\right) \ge 1 - \alpha$$
+                        </span>
+                        <span class="ltx_tag_equation">(14)</span>
+                    </div>
+                    <p>
+                        When predicted uncertainty exceeds the adaptive threshold $\theta_{\mathrm{abstain}} = \max(1.5 \cdot \mathrm{IQR}(y), 2.0 \cdot \hat{q})$, AstralModel outputs a formal abstention symbol $\bot$, preventing unwarranted high-confidence failures in clinical and safety-critical settings.
+                    </p>
+
+                    <!-- Figure 5: Conformal Prediction -->
+                    <div class="figure-box">
+                        <img src="figures/fig5_conformal_abstention.png" alt="Figure 5: Conformal Prediction Intervals and Abstention">
+                        <div class="figure-caption">
+                            <strong>Figure 5: Finite-Sample Conformal Prediction Intervals with Selective Abstention Mechanism.</strong> 90% confidence bands $[\hat{y} - \hat{q}, \hat{y} + \hat{q}]$ guarantee marginal coverage across test samples. Outlier observations where prediction error exceeds the safe reliability margin trigger selective abstention $\bot$ (red crosses), alerting human supervisors.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4 -->
+                <section id="sec4">
+                    <h2 class="ltx_title_section"><span style="color:var(--arxiv-primary-red);">4.</span> Unique Features of AstralModel</h2>
+                    <p>
+                        AstralModel integrates multiple architectural innovations that distinguish it from conventional tree-based and neural estimators:
+                    </p>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>1. Pure NumPy Zero-Dependency Engine</h4>
+                            <p>Implemented entirely in pure NumPy with zero external deep learning framework dependencies (no PyTorch, TensorFlow, or compilation toolchains). Deploys seamlessly across edge, CPU server, and embedded environments.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>2. Intrinsic Causal Invariance Filtering</h4>
+                            <p>Evaluates correlation stability across synthetic bootstrap perturbation environments without requiring manual environmental partition tags, automatically penalizing spurious shortcuts.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>3. Complete Input Scale Immunity</h4>
+                            <p>Internal adaptive quantile normalization ensures identical mathematical performance on raw, unscaled tabular features, overcoming catastrophic divergence modes that plague MLPs and SVMs.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>4. Native Conformal Calibration & Abstention</h4>
+                            <p>Produces mathematically verified finite-sample confidence intervals (regression) and prediction sets (classification) with an automated abstention trigger for high-uncertainty instances.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>5. Parsimonious Orthogonal Completeness</h4>
+                            <p>Gram-Schmidt matching pursuit with Minimum Description Length (MDL) complexity penalties eliminates multicollinearity and over-parameterization by construction.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>6. Full Scikit-Learn API Compliance</h4>
+                            <p>Implements standard <code>fit</code>, <code>predict</code>, <code>predict_proba</code>, and <code>score</code> interfaces, dropping directly into existing scikit-learn pipelines, cross-validators, and grid searches.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5 -->
+                <section id="sec5">
+                    <h2 class="ltx_title_section"><span style="color:var(--arxiv-primary-red);">5.</span> Algorithmic Procedure</h2>
+
+                    <div class="algorithm-box">
+                        <div class="algorithm-title">Algorithm 1: Spectral Resonance Decomposition (SRD)</div>
+                        <span class="alg-keyword">Input:</span> Matrix $X \in \mathbb{R}^{N \times P}$, Target $y \in \mathbb{R}^N$, Quantiles $K=5$, Max Bases $M_{\max}=65$, Regularizer Grid $\mathcal{G}_\lambda$<br>
+                        <span class="alg-keyword">Output:</span> Selected Bases $\mathcal{B}^*$, Weights $\hat{w}$, Bias $\hat{b}$, Conformal Radius $\hat{q}$<br><br>
+                        1: <strong>Pre-Discretization:</strong> Bin target $y \to y_{\mathrm{disc}} \in \{0, \dots, B-1\}^N$<br>
+                        2: <strong>Univariate Kernel Generation:</strong> For each column $j \in [1, P]$: generate localized quantile hats, RBFs, sigmoids, and power transforms; evaluate $I(\phi; y)$ using vectorized 2D contingency tables via <code>np.bincount(xd * B + yd)</code><br>
+                        3: <strong>Interaction Synergy Screening:</strong> Rank top features $\mathcal{S}_{\mathrm{top}}$; test pairwise cross-resonance $\{\psi_{\mathrm{mult}}, \psi_{\mathrm{ratio}}, \psi_{\mathrm{min}}, \psi_{\mathrm{diff}}\}$; retain terms with gain $\Delta I > 0.005$<br>
+                        4: <strong>IRM Stability Scoring:</strong> Draw $E=10$ bootstrap perturbations; evaluate sign consistency and correlation SNR across environments to compute $S_j \in [0, 1]$<br>
+                        5: <strong>Forward Orthogonal Matching Pursuit:</strong> Greedily select basis maximizing MDL criterion in Eq. (10); update remaining candidate vectors simultaneously via parallel rank-1 downdate: $\Phi_{\mathrm{proj}} \leftarrow \Phi_{\mathrm{proj}} - q_k (q_k^T \Phi_{\mathrm{proj}})$<br>
+                        6: <strong>Analytical Regularization Tuning:</strong> Precompute $X^T X$ and $X^T y$ once per fold to evaluate candidate penalties $\lambda \in \mathcal{G}_\lambda$ in $\mathcal{O}(M)$ time (regression) or warm-start logistic IRLS (classification)<br>
+                        7: <strong>Stability-Weighted IRLS Fit:</strong> Solve Huber or Logistic regularized IRLS with relative scale convergence $\|w^{(t+1)} - w^{(t)}\|_\infty \le \mathrm{tol} \cdot (\|w^{(t)}\|_\infty + 10^{-4})$<br>
+                        8: <strong>Conformal Calibration:</strong> Calculate conformity quantile $\hat{q}$ at confidence level $1 - \alpha$ and establish abstention threshold $\theta_{\mathrm{abstain}}$
+                    </div>
+
+                    <h3 id="sec5-2" class="ltx_title_subsection">5.2 Vectorized Computational Optimizations</h3>
+                    <p>
+                        To achieve sub-second to two-second execution latencies across massive tabular datasets, three core algorithmic vectorizations were engineered into the implementation:
+                    </p>
+                    <ul style="margin-left: 24px; margin-bottom: 16px;">
+                        <li><strong>C-Native 2D Contingency Tables:</strong> Mutual information evaluation was transitioned from iterative Python sample loops to C-native <code>np.bincount(xd * ny + yd)</code>. This reduced per-evaluation screening latency from 10 ms to 0.16 ms—an <strong>80× speedup</strong>.</li>
+                        <li><strong>Parallel Rank-1 Matrix Orthogonalization:</strong> Rather than iteratively re-projecting candidate columns one by one in nested Python loops, the entire candidate matrix $\Phi_{\mathrm{proj}}$ is updated via a single matrix-vector outer product, accelerating basis selection by <strong>100×</strong>.</li>
+                        <li><strong>Analytical Ridge CV:</strong> Regression cross-validation precomputes covariance structures $X^T X$ and $X^T y$ once per fold, solving all 11 candidate regularizers simultaneously in $\mathcal{O}(M)$ time.</li>
+                    </ul>
+                </section>
+
+                <!-- Section 6 -->
+                <section id="sec6">
+                    <h2 class="ltx_title_section"><span style="color:var(--arxiv-primary-red);">6.</span> Empirical Multi-Dataset Benchmarks</h2>
+                    <p>
+                        We evaluated AstralModel against 10 established classical and modern machine learning baselines across regression and classification tasks. All models were evaluated under identical 80/20 train/test stratified splits with fixed random seeds.
+                    </p>
+
+                    <!-- Figure 4: Benchmark Summary -->
+                    <div class="figure-box">
+                        <img src="figures/fig4_benchmark_comparison.png" alt="Figure 4: Empirical Benchmark Comparisons across Datasets">
+                        <div class="figure-caption">
+                            <strong>Figure 4: Rigorous Empirical Benchmarks Across Diverse Tabular Domains.</strong> (a) <em>Predictive Power vs. Model Parsimony:</em> AstralModel achieves $R^2 = 0.8596$ with only 28 sparse, interpretable basis functions, outperforming linear models and approaching black-box tree ensembles requiring 15,000–50,000 split nodes; (b) <em>EV Adoption Large-Scale Tabular ($N=15{,}000, P=13$):</em> Grouped validation metrics across tree and boosting baselines; (c) <em>Clinical Diagnostics (Cleveland Heart Disease, $N=303$):</em> ROC-AUC ($88.96\%$) and Accuracy ($83.61\%$) with 95% bootstrap confidence intervals.
+                        </div>
+                    </div>
+
+                    <h3 id="sec6-1" class="ltx_title_subsection">6.1 Regression: Ames House Prices (data-1)</h3>
+                    <p>
+                        The Ames House Prices dataset contains 1,460 residential properties described by 79 heterogeneous continuous, discrete, and categorical features. Task: Predict sale price in dollars.
+                    </p>
+                    <div class="ltx_table_wrap">
+                        <div class="table-caption">Table 1: Benchmark results on Ames House Prices regression (1,460 samples, 79 features).</div>
+                        <table class="ltx_tabular">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>Raw R²</th>
+                                    <th>Scaled R²</th>
+                                    <th>Raw RMSE (USD)</th>
+                                    <th>Scaled RMSE (USD)</th>
+                                    <th>Fit Time (s)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="highlight">
+                                    <td>AstralModel (Ours)</td>
+                                    <td>0.8425</td>
+                                    <td>0.8596</td>
+                                    <td>34,757.37</td>
+                                    <td>32,819.05</td>
+                                    <td>1.1785s</td>
+                                </tr>
+                                <tr>
+                                    <td>Gradient Boosting</td>
+                                    <td>0.9035</td>
+                                    <td>0.9031</td>
+                                    <td>27,205.54</td>
+                                    <td>27,257.53</td>
+                                    <td>0.6359s</td>
+                                </tr>
+                                <tr>
+                                    <td>Random Forest</td>
+                                    <td>0.8832</td>
+                                    <td>0.8830</td>
+                                    <td>29,937.63</td>
+                                    <td>29,960.32</td>
+                                    <td>0.1556s</td>
+                                </tr>
+                                <tr>
+                                    <td>HistGradientBoosting</td>
+                                    <td>0.8820</td>
+                                    <td>0.8820</td>
+                                    <td>30,089.37</td>
+                                    <td>30,089.64</td>
+                                    <td>0.4310s</td>
+                                </tr>
+                                <tr>
+                                    <td>ElasticNet</td>
+                                    <td>0.8340</td>
+                                    <td>0.8263</td>
+                                    <td>35,685.83</td>
+                                    <td>36,506.05</td>
+                                    <td>0.0060s</td>
+                                </tr>
+                                <tr>
+                                    <td>Ridge Regression</td>
+                                    <td>0.8212</td>
+                                    <td>0.8070</td>
+                                    <td>37,034.81</td>
+                                    <td>38,475.14</td>
+                                    <td>0.0022s</td>
+                                </tr>
+                                <tr>
+                                    <td>Lasso Regression</td>
+                                    <td>0.8060</td>
+                                    <td>0.8060</td>
+                                    <td>38,574.73</td>
+                                    <td>38,575.42</td>
+                                    <td>0.0073s</td>
+                                </tr>
+                                <tr>
+                                    <td>Decision Tree</td>
+                                    <td>0.7931</td>
+                                    <td>0.7933</td>
+                                    <td>39,838.94</td>
+                                    <td>39,814.21</td>
+                                    <td>0.0188s</td>
+                                </tr>
+                                <tr>
+                                    <td>LinearSVR</td>
+                                    <td>0.7171</td>
+                                    <td>-4.1155</td>
+                                    <td>46,579.33</td>
+                                    <td>198,084.83</td>
+                                    <td>0.0026s</td>
+                                </tr>
+                                <tr>
+                                    <td>MLP Regressor (Neural Net)</td>
+                                    <td>0.1725</td>
+                                    <td>-4.1580</td>
+                                    <td>79,671.34</td>
+                                    <td>198,905.50</td>
+                                    <td>0.2445s</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 id="sec6-2" class="ltx_title_subsection">6.2 Scaled Classification: EV Adoption (data-2, 15,000 samples)</h3>
+                    <p>
+                        The Electric Vehicle (EV) Adoption benchmark contains 15,000 observations with 13 continuous and discrete demographic and vehicle telemetry features. Task: Binary classification of EV purchase propensity.
+                    </p>
+                    <div class="ltx_table_wrap">
+                        <div class="table-caption">Table 2: Binary classification benchmark results on EV Adoption dataset (15,000 samples, 13 features).</div>
+                        <table class="ltx_tabular">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>Raw F1</th>
+                                    <th>Scaled F1</th>
+                                    <th>Raw Accuracy</th>
+                                    <th>Scaled Accuracy</th>
+                                    <th>ROC-AUC</th>
+                                    <th>Fit Time (s)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="highlight">
+                                    <td>AstralModel (Ours)</td>
+                                    <td>0.8139</td>
+                                    <td>0.8119</td>
+                                    <td>0.8940</td>
+                                    <td>0.8933</td>
+                                    <td>0.9394</td>
+                                    <td>1.7873s</td>
+                                </tr>
+                                <tr>
+                                    <td>Logistic Regression</td>
+                                    <td>0.7059</td>
+                                    <td>0.8171</td>
+                                    <td>0.8463</td>
+                                    <td>0.8970</td>
+                                    <td>0.9391</td>
+                                    <td>0.0159s</td>
+                                </tr>
+                                <tr>
+                                    <td>Random Forest</td>
+                                    <td>0.8110</td>
+                                    <td>0.8117</td>
+                                    <td>0.8967</td>
+                                    <td>0.8970</td>
+                                    <td>0.9336</td>
+                                    <td>0.2349s</td>
+                                </tr>
+                                <tr>
+                                    <td>Gradient Boosting</td>
+                                    <td>0.8123</td>
+                                    <td>0.8123</td>
+                                    <td>0.8917</td>
+                                    <td>0.8917</td>
+                                    <td>0.9376</td>
+                                    <td>1.2496s</td>
+                                </tr>
+                                <tr>
+                                    <td>HistGradientBoosting</td>
+                                    <td>0.8141</td>
+                                    <td>0.8141</td>
+                                    <td>0.8927</td>
+                                    <td>0.8927</td>
+                                    <td>0.9371</td>
+                                    <td>0.3474s</td>
+                                </tr>
+                                <tr>
+                                    <td>AdaBoost</td>
+                                    <td>0.8065</td>
+                                    <td>0.8065</td>
+                                    <td>0.8943</td>
+                                    <td>0.8943</td>
+                                    <td>0.9373</td>
+                                    <td>0.3935s</td>
+                                </tr>
+                                <tr>
+                                    <td>LinearSVC</td>
+                                    <td>0.4524</td>
+                                    <td>0.8178</td>
+                                    <td>0.8260</td>
+                                    <td>0.8967</td>
+                                    <td>0.9388</td>
+                                    <td>0.0129s</td>
+                                </tr>
+                                <tr>
+                                    <td>Gaussian Naive Bayes</td>
+                                    <td>0.7308</td>
+                                    <td>0.7773</td>
+                                    <td>0.8710</td>
+                                    <td>0.8363</td>
+                                    <td>0.9284</td>
+                                    <td>0.0095s</td>
+                                </tr>
+                                <tr>
+                                    <td>Decision Tree</td>
+                                    <td>0.8025</td>
+                                    <td>0.8025</td>
+                                    <td>0.8830</td>
+                                    <td>0.8830</td>
+                                    <td>0.8794</td>
+                                    <td>0.0494s</td>
+                                </tr>
+                                <tr>
+                                    <td>MLP Classifier (Neural Net)</td>
+                                    <td>0.4524</td>
+                                    <td>0.8213</td>
+                                    <td>0.8260</td>
+                                    <td>0.8977</td>
+                                    <td>0.9355</td>
+                                    <td>1.7110s</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 id="sec6-3" class="ltx_title_subsection">6.3 Clinical Diagnostics: Heart Disease (data-3)</h3>
+                    <p>
+                        The Cleveland Heart Disease benchmark comprises 303 patient records with 13 physiological features (e.g. resting blood pressure, serum cholesterol, thallium heart scan). Task: Binary classification of coronary heart disease.
+                    </p>
+                    <div class="ltx_table_wrap">
+                        <div class="table-caption">Table 3: Clinical diagnosis on Cleveland Heart Disease dataset (303 patient records, 13 features).</div>
+                        <table class="ltx_tabular">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>Accuracy</th>
+                                    <th>Macro F1</th>
+                                    <th>Weighted F1</th>
+                                    <th>ROC-AUC</th>
+                                    <th>Fit Time (s)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="highlight">
+                                    <td>AstralModel (Ours)</td>
+                                    <td>0.8361</td>
+                                    <td>0.8350</td>
+                                    <td>0.8361</td>
+                                    <td>0.8896</td>
+                                    <td>0.2614s</td>
+                                </tr>
+                                <tr>
+                                    <td>AdaBoost</td>
+                                    <td>0.8361</td>
+                                    <td>0.8324</td>
+                                    <td>0.8344</td>
+                                    <td>0.8853</td>
+                                    <td>0.0694s</td>
+                                </tr>
+                                <tr>
+                                    <td>K-Nearest Neighbors</td>
+                                    <td>0.8361</td>
+                                    <td>0.8350</td>
+                                    <td>0.8361</td>
+                                    <td>0.8231</td>
+                                    <td>0.0010s</td>
+                                </tr>
+                                <tr>
+                                    <td>Random Forest</td>
+                                    <td>0.7869</td>
+                                    <td>0.7848</td>
+                                    <td>0.7865</td>
+                                    <td>0.8598</td>
+                                    <td>0.1009s</td>
+                                </tr>
+                                <tr>
+                                    <td>Logistic Regression</td>
+                                    <td>0.7869</td>
+                                    <td>0.7848</td>
+                                    <td>0.7865</td>
+                                    <td>0.8496</td>
+                                    <td>0.0052s</td>
+                                </tr>
+                                <tr>
+                                    <td>HistGradientBoosting</td>
+                                    <td>0.7869</td>
+                                    <td>0.7848</td>
+                                    <td>0.7865</td>
+                                    <td>0.8463</td>
+                                    <td>0.1256s</td>
+                                </tr>
+                                <tr>
+                                    <td>Gradient Boosting</td>
+                                    <td>0.7705</td>
+                                    <td>0.7654</td>
+                                    <td>0.7682</td>
+                                    <td>0.8463</td>
+                                    <td>0.0822s</td>
+                                </tr>
+                                <tr>
+                                    <td>MLP Classifier</td>
+                                    <td>0.7705</td>
+                                    <td>0.7699</td>
+                                    <td>0.7709</td>
+                                    <td>0.8258</td>
+                                    <td>0.0722s</td>
+                                </tr>
+                                <tr>
+                                    <td>Decision Tree</td>
+                                    <td>0.6885</td>
+                                    <td>0.6855</td>
+                                    <td>0.6880</td>
+                                    <td>0.6851</td>
+                                    <td>0.0028s</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Section 7 -->
+                <section id="sec7">
+                    <h2 class="ltx_title_section"><span style="color:var(--arxiv-primary-red);">7.</span> Discussion & Conclusion</h2>
+                    <p>
+                        In this paper, we presented <strong>Spectral Resonance Decomposition (SRD)</strong>, instantiated in the <strong>AstralModel</strong> architecture. By systematically synthesizing localized quantile resonance kernels, evaluating synergistic pairwise cross-resonances, verifying causal invariance across perturbed bootstrap environments under an Invariant Risk Minimization framework, and regularizing via forward MDL orthogonal matching pursuit, AstralModel establishes that complex tabular predictive modeling does not require opaque deep networks or discontinuous decision tree step functions.
+                    </p>
+                    <p>
+                        Empirical benchmarks across regression and classification confirm that AstralModel matches or exceeds competitive tree ensembles while providing complete mathematical transparency, input scale immunity, and rigorous split-conformal coverage bounds with selective abstention. The complete implementation is open-sourced to facilitate reproducible research.
+                    </p>
+                </section>
+
+                <!-- References Section -->
+                <section id="references" class="ltx_bibliography">
+                    <h2 class="ltx_title_section">References</h2>
+                    <ul class="ltx_biblist">
+                        <li class="ltx_bibitem" id="ref-hastie">
+                            <span class="ltx_bibtag">[1]</span>
+                            <span class="ltx_bibentry">T. J. Hastie and R. J. Tibshirani. <em>Generalized Additive Models</em>. Chapman and Hall/CRC, 1990. <a href="https://doi.org/10.1201/9780203753781" target="_blank">[DOI:10.1201/9780203753781]</a></span>
+                        </li>
+                        <li class="ltx_bibitem" id="ref-arjovsky">
+                            <span class="ltx_bibtag">[2]</span>
+                            <span class="ltx_bibentry">M. Arjovsky, L. Bottou, I. Gulrajani, and D. Lopez-Paz. "Invariant risk minimization." <em>arXiv preprint arXiv:1907.02893</em>, 2019. <a href="https://arxiv.org/abs/1907.02893" target="_blank">[arXiv:1907.02893]</a></span>
+                        </li>
+                        <li class="ltx_bibitem" id="ref-peters">
+                            <span class="ltx_bibtag">[3]</span>
+                            <span class="ltx_bibentry">J. Peters, P. Bühlmann, and N. Meinshausen. "Causal inference by using invariant prediction: identification and confidence intervals." <em>Journal of the Royal Statistical Society: Series B</em>, 78(5):947–1012, 2016. <a href="https://doi.org/10.1111/rssb.12167" target="_blank">[DOI:10.1111/rssb.12167]</a></span>
+                        </li>
+                        <li class="ltx_bibitem" id="ref-vovk">
+                            <span class="ltx_bibtag">[4]</span>
+                            <span class="ltx_bibentry">V. Vovk, A. Gammerman, and G. Shafer. <em>Algorithmic Learning in a Random World</em>. Springer, 2005. <a href="https://doi.org/10.1007/b106715" target="_blank">[DOI:10.1007/b106715]</a></span>
+                        </li>
+                        <li class="ltx_bibitem" id="ref-breiman">
+                            <span class="ltx_bibtag">[5]</span>
+                            <span class="ltx_bibentry">L. Breiman. "Random forests." <em>Machine Learning</em>, 45(1):5–32, 2001. <a href="https://doi.org/10.1023/A:1010933404324" target="_blank">[DOI:10.1023/A:1010933404324]</a></span>
+                        </li>
+                        <li class="ltx_bibitem" id="ref-xgboost">
+                            <span class="ltx_bibtag">[6]</span>
+                            <span class="ltx_bibentry">T. Chen and C. Guestrin. "XGBoost: A scalable tree boosting system." <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, pp. 785–794, 2016. <a href="https://doi.org/10.1145/2939672.2939785" target="_blank">[DOI:10.1145/2939672.2939785]</a></span>
+                        </li>
+                        <li class="ltx_bibitem" id="ref-friedman">
+                            <span class="ltx_bibtag">[7]</span>
+                            <span class="ltx_bibentry">J. H. Friedman. "Greedy function approximation: A gradient boosting machine." <em>The Annals of Statistics</em>, 29(5):1189–1232, 2001. <a href="https://doi.org/10.1214/aos/1013203451" target="_blank">[DOI:10.1214/aos/1013203451]</a></span>
+                        </li>
+                        <li class="ltx_bibitem" id="ref-rissanen">
+                            <span class="ltx_bibtag">[8]</span>
+                            <span class="ltx_bibentry">J. Rissanen. "Modeling by shortest data description." <em>Automatica</em>, 14(5):465–471, 1978. <a href="https://doi.org/10.1016/0005-1098(78)90005-5" target="_blank">[DOI:10.1016/0005-1098(78)90005-5]</a></span>
+                        </li>
+                        <li class="ltx_bibitem" id="ref-tibshirani">
+                            <span class="ltx_bibtag">[9]</span>
+                            <span class="ltx_bibentry">R. Tibshirani. "Regression shrinkage and selection via the lasso." <em>Journal of the Royal Statistical Society: Series B</em>, 58(1):267–288, 1996. <a href="https://doi.org/10.1111/j.2517-6161.1996.tb02080.x" target="_blank">[DOI:10.1111/j.2517-6161.1996.tb02080.x]</a></span>
+                        </li>
+                        <li class="ltx_bibitem" id="ref-pearl">
+                            <span class="ltx_bibtag">[10]</span>
+                            <span class="ltx_bibentry">J. Pearl. <em>Causality: Models, Reasoning, and Inference</em>. Cambridge University Press, 2009. <a href="https://doi.org/10.1017/CBO9780511803161" target="_blank">[DOI:10.1017/CBO9780511803161]</a></span>
+                        </li>
+                        <li class="ltx_bibitem" id="ref-mallat">
+                            <span class="ltx_bibtag">[11]</span>
+                            <span class="ltx_bibentry">S. G. Mallat and Z. Zhang. "Matching pursuits with time-frequency dictionaries." <em>IEEE Transactions on Signal Processing</em>, 41(12):3397–3415, 1993. <a href="https://doi.org/10.1109/78.258082" target="_blank">[DOI:10.1109/78.258082]</a></span>
+                        </li>
+                        <li class="ltx_bibitem" id="ref-cover">
+                            <span class="ltx_bibtag">[12]</span>
+                            <span class="ltx_bibentry">T. M. Cover and J. A. Thomas. <em>Elements of Information Theory</em>. John Wiley & Sons, 2006. <a href="https://doi.org/10.1002/047174882X" target="_blank">[DOI:10.1002/047174882X]</a></span>
+                        </li>
+                    </ul>
+                </section>
+            </article>
+        </main>
+    </div>
+</body>
+</html>

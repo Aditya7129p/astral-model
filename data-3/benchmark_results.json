@@ -1,0 +1,164 @@
+{
+  "dataset": "data-3 (Heart Disease)",
+  "task": "classification",
+  "n_samples": 303,
+  "n_features": 13,
+  "raw_results": {
+    "AstralModel": {
+      "accuracy": 0.8361,
+      "f1_macro": 0.8339,
+      "f1_weighted": 0.8354,
+      "roc_auc": 0.8561,
+      "fit_time_s": 0.3043
+    },
+    "Logistic Regression": {
+      "accuracy": 0.7869,
+      "f1_macro": 0.7848,
+      "f1_weighted": 0.7865,
+      "roc_auc": 0.8409,
+      "fit_time_s": 0.1407
+    },
+    "Random Forest": {
+      "accuracy": 0.7869,
+      "f1_macro": 0.7848,
+      "f1_weighted": 0.7865,
+      "roc_auc": 0.8588,
+      "fit_time_s": 0.1382
+    },
+    "Gradient Boosting": {
+      "accuracy": 0.7705,
+      "f1_macro": 0.7654,
+      "f1_weighted": 0.7682,
+      "roc_auc": 0.8452,
+      "fit_time_s": 0.0909
+    },
+    "HistGradientBoosting": {
+      "accuracy": 0.7869,
+      "f1_macro": 0.7848,
+      "f1_weighted": 0.7865,
+      "roc_auc": 0.8463,
+      "fit_time_s": 0.1269
+    },
+    "LinearSVC": {
+      "accuracy": 0.7869,
+      "f1_macro": 0.7848,
+      "f1_weighted": 0.7865,
+      "roc_auc": 0.842,
+      "fit_time_s": 0.002
+    },
+    "K-Nearest Neighbors": {
+      "accuracy": 0.6885,
+      "f1_macro": 0.676,
+      "f1_weighted": 0.6812,
+      "roc_auc": 0.7029,
+      "fit_time_s": 0.0026
+    },
+    "Gaussian Naive Bayes": {
+      "accuracy": 0.7705,
+      "f1_macro": 0.7654,
+      "f1_weighted": 0.7682,
+      "roc_auc": 0.8258,
+      "fit_time_s": 0.001
+    },
+    "Decision Tree": {
+      "accuracy": 0.6885,
+      "f1_macro": 0.6855,
+      "f1_weighted": 0.688,
+      "roc_auc": 0.6851,
+      "fit_time_s": 0.0017
+    },
+    "AdaBoost": {
+      "accuracy": 0.8361,
+      "f1_macro": 0.8324,
+      "f1_weighted": 0.8344,
+      "roc_auc": 0.8853,
+      "fit_time_s": 0.0635
+    },
+    "MLP Classifier": {
+      "accuracy": 0.6721,
+      "f1_macro": 0.6699,
+      "f1_weighted": 0.6721,
+      "roc_auc": 0.7857,
+      "fit_time_s": 0.0655
+    }
+  },
+  "scaled_results": {
+    "AstralModel": {
+      "accuracy": 0.8361,
+      "f1_macro": 0.835,
+      "f1_weighted": 0.8361,
+      "roc_auc": 0.8896,
+      "fit_time_s": 0.317
+    },
+    "Logistic Regression": {
+      "accuracy": 0.7869,
+      "f1_macro": 0.7848,
+      "f1_weighted": 0.7865,
+      "roc_auc": 0.8496,
+      "fit_time_s": 0.0052
+    },
+    "Random Forest": {
+      "accuracy": 0.7869,
+      "f1_macro": 0.7848,
+      "f1_weighted": 0.7865,
+      "roc_auc": 0.8598,
+      "fit_time_s": 0.1377
+    },
+    "Gradient Boosting": {
+      "accuracy": 0.7705,
+      "f1_macro": 0.7654,
+      "f1_weighted": 0.7682,
+      "roc_auc": 0.8463,
+      "fit_time_s": 0.0951
+    },
+    "HistGradientBoosting": {
+      "accuracy": 0.7869,
+      "f1_macro": 0.7848,
+      "f1_weighted": 0.7865,
+      "roc_auc": 0.8463,
+      "fit_time_s": 0.1419
+    },
+    "LinearSVC": {
+      "accuracy": 0.7869,
+      "f1_macro": 0.7848,
+      "f1_weighted": 0.7865,
+      "roc_auc": 0.8452,
+      "fit_time_s": 0.0013
+    },
+    "K-Nearest Neighbors": {
+      "accuracy": 0.8361,
+      "f1_macro": 0.835,
+      "f1_weighted": 0.8361,
+      "roc_auc": 0.8231,
+      "fit_time_s": 0.001
+    },
+    "Gaussian Naive Bayes": {
+      "accuracy": 0.7705,
+      "f1_macro": 0.7654,
+      "f1_weighted": 0.7682,
+      "roc_auc": 0.8258,
+      "fit_time_s": 0.0011
+    },
+    "Decision Tree": {
+      "accuracy": 0.6885,
+      "f1_macro": 0.6855,
+      "f1_weighted": 0.688,
+      "roc_auc": 0.6851,
+      "fit_time_s": 0.0017
+    },
+    "AdaBoost": {
+      "accuracy": 0.8361,
+      "f1_macro": 0.8324,
+      "f1_weighted": 0.8344,
+      "roc_auc": 0.8853,
+      "fit_time_s": 0.068
+    },
+    "MLP Classifier": {
+      "accuracy": 0.7705,
+      "f1_macro": 0.7699,
+      "f1_weighted": 0.7709,
+      "roc_auc": 0.8258,
+      "fit_time_s": 0.0781
+    }
+  }
+}

@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ASTRAL Developer Guide &amp; Architecture Reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-canvas: #0b0f19;
+      --bg-surface: #111827;
+      --bg-surface-elevated: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-primary: #38bdf8;
+      --accent-indigo: #818cf8;
+      --accent-purple: #c084fc;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border-subtle: #1e293b;
+      --border-highlight: #334155;
+      --code-bg: #070b14;
+      --sidebar-width: 280px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    header.top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 15, 25, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.15rem;
+    }
+    .brand-badge {
+      background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+    .version-tag {
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent-primary);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .layout-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+      min-height: calc(100vh - 65px);
+    }
+
+    nav.toc {
+      position: sticky;
+      top: 65px;
+      height: calc(100vh - 65px);
+      overflow-y: auto;
+      padding: 32px 20px;
+      border-right: 1px solid var(--border-subtle);
+      font-size: 0.88rem;
+    }
+    nav.toc .toc-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+    nav.toc a {
+      display: block;
+      padding: 7px 12px;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.15s ease;
+      margin-bottom: 2px;
+    }
+    nav.toc a:hover {
+      color: var(--text-primary);
+      background: var(--bg-surface-elevated);
+    }
+    nav.toc a.active {
+      color: var(--accent-primary);
+      background: rgba(56, 189, 248, 0.08);
+      font-weight: 600;
+    }
+
+    main.content {
+      padding: 40px 56px 100px;
+      max-width: 1040px;
+    }
+
+    .hero-section {
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 40px;
+    }
+    .hero-title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      max-width: 820px;
+      line-height: 1.6;
+    }
+
+    h2 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-top: 52px;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    h2 .section-num {
+      color: var(--accent-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+    }
+    h3 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #e2e8f0;
+    }
+    p { margin-bottom: 16px; color: #cbd5e1; }
+    ul, ol { margin-bottom: 18px; padding-left: 24px; color: #cbd5e1; }
+    li { margin-bottom: 6px; }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 24px 0;
+    }
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 22px;
+      transition: all 0.2s ease;
+    }
+    .card:hover {
+      border-color: var(--border-highlight);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+    .card h4 {
+      font-size: 1.05rem;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0;
+    }
+
+    .callout {
+      border-left: 4px solid var(--accent-primary);
+      background: rgba(56, 189, 248, 0.06);
+      border-radius: 0 10px 10px 0;
+      padding: 16px 20px;
+      margin: 22px 0;
+      font-size: 0.95rem;
+    }
+    .callout.success {
+      border-left-color: var(--accent-emerald);
+      background: rgba(16, 185, 129, 0.06);
+    }
+    .callout.warning {
+      border-left-color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.06);
+    }
+
+    .math-block {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 18px 24px;
+      margin: 20px 0;
+      text-align: center;
+      font-size: 1.08rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: #7dd3fc;
+      overflow-x: auto;
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      margin: 18px 0 24px;
+      color: #e2e8f0;
+    }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+    }
+    p code, li code, td code {
+      background: rgba(56, 189, 248, 0.1);
+      color: #7dd3fc;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      text-align: left;
+    }
+    th {
+      background: var(--bg-surface-elevated);
+      color: #fff;
+      font-weight: 600;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .badge-blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+    .badge-green { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .badge-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 32px 0 0;
+      margin-top: 60px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media (max-width: 960px) {
+      .layout-container { grid-template-columns: 1fr; }
+      nav.toc { display: none; }
+      main.content { padding: 24px; }
+      .hero-title { font-size: 2.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="brand">
+    <span class="brand-badge">ASTRAL</span>
+    <span>Developer Architecture Guide</span>
+    <span class="version-tag">v0.2.0</span>
+  </div>
+  <div>
+    <a href="ASTRAL_USER_GUIDE.html" style="color: #38bdf8; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Switch to User Guide &rarr;</a>
+  </div>
+</header>
+
+<div class="layout-container">
+  <nav class="toc">
+    <div class="toc-title">Architecture Blueprint</div>
+    <a href="#philosophy" class="active">1. Core Philosophy</a>
+    <a href="#mathematics">2. Mathematical Foundations</a>
+    <a href="#dictionary">3. Basis Function Dictionary</a>
+    <a href="#interactions">4. Pairwise Resonance Screen</a>
+    <a href="#irm-stability">5. Causal IRM Diagnostics</a>
+    <a href="#mdl-orthogonal">6. MDL Greedy Selection</a>
+    <a href="#regularization">7. Stability-Weighted Fitting</a>
+    <a href="#conformal">8. Conformal Uncertainty</a>
+    <a href="#pipeline">9. Six-Phase Pipeline Flow</a>
+    <a href="#performance">10. Performance &amp; Scalability</a>
+    <a href="#extending">11. Developer Extension Points</a>
+    <a href="#benchmarks">12. Verification &amp; Testing</a>
+  </nav>
+
+  <main class="content">
+    <div class="hero-section">
+      <h1 class="hero-title">ASTRAL System Architecture &amp; Technical Specification</h1>
+      <p class="hero-subtitle">
+        An in-depth guide to Adaptive Spectral Resonance Decomposition (SRD), Invariant Risk Minimization (IRM) stability diagnostics, Gram-Schmidt orthogonalization, and conformal uncertainty calibration for interpretable tabular machine learning.
+      </p>
+    </div>
+
+    <!-- Section 1 -->
+    <section id="philosophy">
+      <h2><span class="section-num">01</span> Core Philosophy &amp; Design Rationale</h2>
+      <p>
+        Tabular machine learning has long suffered an acute dichotomy between <strong>opaque gradient-boosted decision trees (GBDTs) / deep neural networks</strong> and <strong>rigid linear/logistic models</strong>:
+      </p>
+      <div class="card-grid">
+        <div class="card">
+          <h4><span>⚡</span> The Ensembling Problem</h4>
+          <p>GBDTs (XGBoost, LightGBM, CatBoost) achieve high empirical accuracy by recursively partitioning feature space, but generate thousands of discontinuous step functions that cannot be mathematically audited, verified for causal invariant behavior, or proven free of spurious shortcut correlations.</p>
+        </div>
+        <div class="card">
+          <h4><span>🧠</span> The Neural Tabular Problem</h4>
+          <p>Deep tabular models (TabNet, FT-Transformer) incur immense computational training overhead, require delicate learning rate schedules, struggle with heterogeneous unscaled data, and remain black-box function approximators.</p>
+        </div>
+        <div class="card">
+          <h4><span>💎</span> The ASTRAL Alternative</h4>
+          <p>ASTRAL operates in a continuous Reproducing Kernel Hilbert Space (RKHS) by dynamically synthesising empirical quantile basis functions, isolating non-linear cross-feature resonance, penalizing unstable shortcut features via IRM, and solving a closed-form convex regularized objective.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2 -->
+    <section id="mathematics">
+      <h2><span class="section-num">02</span> Mathematical Foundations</h2>
+      <p>
+        Let <code>D = {(x_i, y_i)}_{i=1}^N</code> denote a dataset where <code>x_i &isin; R^d</code> and <code>y_i &isin; Y</code>. ASTRAL models the response function <code>f(x)</code> as a linear combination of discovered non-linear basis functionals <code>&phi;_k: R^d &rarr; R</code>:
+      </p>
+      <div class="math-block">
+        f(x) = w_0 + &sum;_{k=1}^M w_k &phi;_k(x) = w_0 + w^T &Phi;(x)
+      </div>
+      <p>
+        Unlike fixed polynomial or Fourier expansions whose basis size suffers from the curse of dimensionality <code>O(d^p)</code>, ASTRAL discovers an adaptive, highly sparse dictionary <code>B = {&phi;_1, ..., &phi;_M}</code> with <code>M &ll; d^2</code> via mutual information resonance screening and Minimal Description Length (MDL) pruning.
+      </p>
+    </section>
+
+    <!-- Section 3 -->
+    <section id="dictionary">
+      <h2><span class="section-num">03</span> Basis Function Dictionary</h2>
+      <p>
+        For each marginal feature <code>X_j</code>, ASTRAL computes <code>Q</code> empirical quantiles <code>q_1 &lt; q_2 &lt; ... &lt; q_Q</code> and evaluates six complementary non-linear basis families:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Basis Family</th>
+            <th>Mathematical Formulation</th>
+            <th>Structural Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Linear</strong></td>
+            <td><code>&phi;(x) = x_j</code></td>
+            <td>Global monotonic trends and baseline linear relationships</td>
+          </tr>
+          <tr>
+            <td><strong>Quantile Hat (Spline)</strong></td>
+            <td><code>&Lambda;(x; q_{k-1}, q_k, q_{k+1}) = max(0, 1 - |x - q_k| / &Delta;)</code></td>
+            <td>Piecewise linear local regimes and localized modal densities</td>
+          </tr>
+          <tr>
+            <td><strong>Gaussian RBF</strong></td>
+            <td><code>&kappa;(x; c, &sigma;) = exp(- (x - c)^2 / (2&sigma;^2))</code></td>
+            <td>Smooth bell-shaped clustering and non-linear localized attraction</td>
+          </tr>
+          <tr>
+            <td><strong>Sigmoidal Transition</strong></td>
+            <td><code>&sigma;(x; c, w) = 1 / (1 + exp(-w(x - c)))</code></td>
+            <td>Smooth binary phase shifts and threshold saturation phenomena</td>
+          </tr>
+          <tr>
+            <td><strong>Root &amp; Power Transforms</strong></td>
+            <td><code>&phi;(x) = sign(x)&radic;|x|,&nbsp;&nbsp;&phi;(x) = x^2</code></td>
+            <td>Sub-linear diminishing returns and super-linear quadratic acceleration</td>
+          </tr>
+          <tr>
+            <td><strong>Heaviside Step</strong></td>
+            <td><code>&theta;(x; q_k) = 1 if x &ge; q_k else 0</code></td>
+            <td>Hard administrative boundaries, policy thresholds, and categorical splits</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Section 4 -->
+    <section id="interactions">
+      <h2><span class="section-num">04</span> Pairwise Non-Linear Resonance Screening</h2>
+      <p>
+        Given top informative marginal bases <code>&phi;_i</code> and <code>&phi;_j</code>, ASTRAL constructs candidate bivariate interaction functionals:
+      </p>
+      <div class="math-block">
+        &psi;_{mult} = &phi;_i(x) &middot; &phi;_j(x), &emsp;
+        &psi;_{ratio} = &phi;_i(x) / (|&phi;_j(x)| + &epsilon;), &emsp;
+        &psi;_{min} = min(&phi;_i(x), &phi;_j(x)), &emsp;
+        &psi;_{diff} = |&phi;_i(x) - &phi;_j(x)|
+      </div>
+      <p>
+        A candidate interaction functional <code>&psi;</code> is admitted into the dictionary if and only if it exhibits <em>Resonance Gain</em> over both individual constituents:
+      </p>
+      <div class="math-block">
+        Gain(&psi;; y) = I(&psi;; y) - max( I(&phi;_i; y), I(&phi;_j; y) ) &gt; &tau;_{resonance}
+      </div>
+      <p>
+        This guarantees that the model only incorporates interactions that capture genuine synergistic non-linear information, preventing combinatorial explosion.
+      </p>
+    </section>
+
+    <!-- Section 5 -->
+    <section id="irm-stability">
+      <h2><span class="section-num">05</span> Invariant Risk Minimization (IRM) Stability Diagnostics</h2>
+      <p>
+        Standard empirical risk minimization (ERM) eagerly exploits spurious correlations that happen to align with targets in the training sample. ASTRAL mitigates this by generating <code>E</code> synthetic perturbation environments <code>E = {e_1, e_2, ..., e_E}</code> through bootstrap resampling and adversarial feature noise injection.
+      </p>
+      <p>
+        For each candidate basis functional <code>&phi;_k</code>, ASTRAL computes the correlation vector across all environments <code>&rho;_k = [corr^{(e)}(&phi;_k, y)]_{e &isin; E}</code> and calculates an invariance stability score <code>s_k &isin; [0, 1]</code>:
+      </p>
+      <div class="math-block">
+        s_k = | &mu;(&rho;_k) | &middot; max(0, 1 - &sigma;(&rho;_k) / (&epsilon; + |&mu;(&rho;_k)|))
+      </div>
+      <div class="callout">
+        <strong>Invariance Ingestion Rule:</strong> If a basis functional displays erratic correlation flips across resampled splits, its stability score <code>s_k &rarr; 0</code>. If it reliably maintains consistent directionality and high signal-to-noise ratio across all splits, <code>s_k &rarr; 1</code>.
+      </div>
+    </section>
+
+    <!-- Section 6 -->
+    <section id="mdl-orthogonal">
+      <h2><span class="section-num">06</span> Minimal Description Length &amp; Gram-Schmidt Selection</h2>
+      <p>
+        To prevent collinear redundancy and over-parameterization, candidate bases are selected sequentially using greedy forward orthogonal residual pursuit:
+      </p>
+      <ol>
+        <li>Initialize residual vector <code>r_0 = y - mean(y)</code> and active basis set <code>S_0 = &empty;</code>.</li>
+        <li>At step <code>m</code>, project each candidate basis <code>&phi;_j</code> onto the orthogonal complement of the subspace spanned by <code>S_{m-1}</code> using modified Gram-Schmidt:
+          <div class="math-block">
+            &phi;&#771;_j^{(m)} = &phi;_j - &sum;_{k &isin; S_{m-1}} [ &lang;&phi;_j, u_k&rang; / ||u_k||^2 ] u_k
+          </div>
+        </li>
+        <li>Score candidate <code>&phi;_j</code> by trading off residual correlation against stability and Description Length penalty:
+          <div class="math-block">
+            Score(&phi;_j) = [ |&lang;r_{m-1}, &phi;&#771;_j^{(m)}&rang;| / ||&phi;&#771;_j^{(m)}|| ] &middot; (0.5 + 0.5 s_j) - &gamma; &middot; MDL(&phi;_j)
+          </div>
+        </li>
+        <li>Add the maximizer <code>&phi;* = argmax_j Score(&phi;_j)</code> to <code>S_m</code> and update residual <code>r_m</code>. Terminate when gain drops below threshold or max bases budget is reached.</li>
+      </ol>
+    </section>
+
+    <!-- Section 7 -->
+    <section id="regularization">
+      <h2><span class="section-num">07</span> Stability-Weighted Regularized Fitting</h2>
+      <p>
+        Once the active basis design matrix <code>&Phi; &isin; R^{N &times; M}</code> is assembled, the model solves the convex stability-weighted regularized problem:
+      </p>
+      <div class="math-block">
+        min_w &ensp; L(y, &Phi; w) + &frac12; w^T R w
+      </div>
+      <p>
+        where <code>R</code> is a diagonal regularization matrix whose penalty dynamically scales inversely with causal stability:
+      </p>
+      <div class="math-block">
+        R_{jj} = &lambda; / (0.25 + 0.75 s_j)
+      </div>
+      <p>
+        For regression, <code>L</code> is squared error or Huber loss, yielding the direct closed-form normal equations:
+      </p>
+      <div class="math-block">
+        w* = ( &Phi;^T &Phi; + R )^{-1} &Phi;^T y
+      </div>
+      <p>
+        For classification, <code>L</code> is binary or multinomial cross-entropy, solved via Newton-CG optimization with analytical gradient and Hessian vector products.
+      </p>
+    </section>
+
+    <!-- Section 8 -->
+    <section id="conformal">
+      <h2><span class="section-num">08</span> Conformal Uncertainty &amp; Abstention Engine</h2>
+      <p>
+        ASTRAL incorporates non-asymptotic distribution-free conformal calibration. Let <code>&alpha; &isin; (0, 1)</code> be the user error rate budget:
+      </p>
+      <div class="card-grid">
+        <div class="card">
+          <h4><span>🎯</span> Conformal Prediction Intervals (Regression)</h4>
+          <p>Computes absolute residual nonconformity scores <code>R_i = |y_i - y&#770;_i|</code>. Finds the empirical <code>(1 - &alpha;)(1 + 1/N)</code> quantile <code>q&#770;</code>. Guarantees finite-sample coverage:
+          <br><br><code>P( Y &isin; [ f(x) - q&#770;, f(x) + q&#770; ] ) &ge; 1 - &alpha;</code></p>
+        </div>
+        <div class="card">
+          <h4><span>🛡️</span> Conformal Prediction Sets (Classification)</h4>
+          <p>Computes cumulative softmax nonconformity. Returns guaranteed prediction sets <code>C(x) &sube; Y</code>. If <code>|C(x)| &gt; 1</code> or predicted class probability falls below the confidence margin, triggers automated prediction abstention.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 9 -->
+    <section id="pipeline">
+      <h2><span class="section-num">09</span> Six-Phase Execution Pipeline</h2>
+      <pre><code>[Input Data Matrix X (N x d), Target y]
+                     │
+    Phase 1 ─────────▼───────── Input Validation &amp; Imputation
+                     │          • Median imputation for NaNs / infinities
+                     │          • Empirical quantile mesh construction
+    Phase 2 ─────────▼───────── Univariate Basis Synthesis
+                     │          • Linear, Quantile Hats, RBFs, Sigmoids, Roots, Steps
+                     │          • Mutual information marginal filtering
+    Phase 3 ─────────▼───────── Non-Linear Resonance Interaction
+                     │          • Multiplicative, Ratio, Min, Difference combinations
+                     │          • Positive resonance synergy screening: I(a,b; y) &gt; max(I_a, I_b)
+    Phase 4 ─────────▼───────── Perturbation Environments &amp; IRM
+                     │          • E=10 bootstrapped environments
+                     │          • Stability score computation: s_j in [0, 1]
+    Phase 5 ─────────▼───────── Orthogonal Gram-Schmidt &amp; MDL Pruning
+                     │          • Residual projection and collinearity elimination
+                     │          • Sparse dictionary selection (M &lt;&lt; d^2)
+    Phase 6 ─────────▼───────── Stability-Weighted Optimization
+                                • R_jj = lambda / (0.25 + 0.75 s_j)
+                                • Direct normal equations (regression) or Newton-CG (classification)
+                                • Calibrated conformal intervals &amp; prediction sets</code></pre>
+    </section>
+
+    <!-- Section 10 -->
+    <section id="performance">
+      <h2><span class="section-num">10</span> Performance &amp; Scalability</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h4><span>🚀</span> Subsampled Discovery</h4>
+          <p>For large tabular datasets (<code>N &gt; 25,000</code>), ASTRAL executes basis screening and stability diagnostics on a stratified sub-sample (<code>N_{sub} = 4,000</code> default, configurable). This slashes discovery latency from minutes to <strong>under 2.5 seconds</strong> on datasets with 600,000+ rows.</p>
+        </div>
+        <div class="card">
+          <h4><span>⚡</span> Zero C++ / Pure NumPy</h4>
+          <p>The entire pipeline is vectorized with contiguous memory allocations, SIMD-friendly linear algebra, and zero external binary compiled dependencies.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 11 -->
+    <section id="extending">
+      <h2><span class="section-num">11</span> Developer Extension Points</h2>
+      <p>Developers can easily inject custom basis transforms or regularizers by extending the <code>ResonanceBasis</code> interface:</p>
+      <pre><code>from astral import ResonanceBasis
+import numpy as np
+
+class CustomPeriodicBasis(ResonanceBasis):
+    """Custom Fourier / Periodic resonance basis."""
+    def __init__(self, feature_idx, frequency, name=None):
+        super().__init__(feature_indices=[feature_idx], transform_type="periodic", name=name)
+        self.frequency = frequency
+
+    def evaluate(self, X):
+        col = X[:, self.feature_indices[0]]
+        return np.sin(self.frequency * col)
+
+    def description_length(self):
+        return 2.5  # Complexity penalty for periodic functions</code></pre>
+    </section>
+
+    <!-- Section 12 -->
+    <section id="benchmarks">
+      <h2><span class="section-num">12</span> Verification &amp; Test Protocol</h2>
+      <p>
+        The package includes an end-to-end automated testing harness in <code>test_astral.py</code> covering metadata, classification, regression, conformal coverage, data quality reporting, and scikit-learn compliance.
+      </p>
+      <pre><code># Run complete test suite
+python test_astral.py
+
+# Run multi-dataset benchmark comparison against 10 baselines
+python benchmark_models.py</code></pre>
+    </section>
+
+    <footer>
+      <span>ASTRAL Project &bull; Author: Aditya Pandey &bull; Apache-2.0 License</span>
+      <span>Documentation v0.2.0</span>
+    </footer>
+  </main>
+</div>
+
+</body>
+</html>

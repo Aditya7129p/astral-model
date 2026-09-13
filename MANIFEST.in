@@ -1,0 +1,13 @@
+include README.md
+include LICENSE
+include pyproject.toml
+include setup.py
+include astral_model.py
+recursive-include astral *.py
+recursive-include docs *.html *.md *.png
+recursive-exclude docs/figures *.pdf
+exclude *.pdf
+exclude *.tar.gz
+exclude *.zip
+global-exclude __pycache__
+global-exclude *.py[cod]
