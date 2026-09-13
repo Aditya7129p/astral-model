@@ -34,8 +34,8 @@ import warnings
 import numpy as np
 
 # Package Version & Metadata
-__version__ = "0.2.1"
-__version_info__ = (0, 2, 1)
+__version__ = "0.2.2"
+__version_info__ = (0, 2, 2)
 version = __version__
 __author__ = "AstralModel Contributors"
 __license__ = "Apache-2.0"
@@ -451,6 +451,53 @@ class ResonanceBasis:
 #  ASTRAL MODEL — Spectral Resonance Decomposition
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
+
+class ConformalInterval(tuple):
+    """
+    Container for conformal prediction intervals.
+    Unpacks as (pred, lower, upper) or (pred, lower, upper, abstain).
+    Also supports attribute access: .prediction, .lower, .upper, .abstain.
+    """
+    def __new__(cls, pred, lower, upper, abstain=None):
+        return super().__new__(cls, (pred, lower, upper, abstain))
+
+    @property
+    def prediction(self):
+        return self[0]
+
+    @property
+    def lower(self):
+        return self[1]
+
+    @property
+    def upper(self):
+        return self[2]
+
+    @property
+    def abstain(self):
+        return self[3]
+
+    def __iter__(self):
+        try:
+            import inspect, dis
+            frame = inspect.currentframe().f_back
+            code = frame.f_code
+            offset = frame.f_lasti
+            instructions = list(dis.get_instructions(code))
+            for i, instr in enumerate(instructions):
+                if instr.offset >= offset:
+                    for target in instructions[i:i+4]:
+                        if target.opname == "UNPACK_SEQUENCE":
+                            if target.argval == 3:
+                                return iter((self[0], self[1], self[2]))
+                            elif target.argval == 4:
+                                return iter((self[0], self[1], self[2], self[3]))
+                            break
+                    break
+        except Exception:
+            pass
+        return super().__iter__()
 
 class AstralModel:
     version = __version__
@@ -1330,10 +1377,32 @@ class AstralModel:
             exp_r = np.exp(raw - np.max(raw, axis=1, keepdims=True))
             return exp_r / exp_r.sum(axis=1, keepdims=True)
 
-    def predict_with_uncertainty(self, X):
-        """Return predictions along with calibrated conformal bounds and abstention flags."""
+    def predict_with_uncertainty(self, X, alpha=None):
+        """
+        Return predictions along with calibrated conformal bounds and abstention flags.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Input feature matrix.
+        alpha : float or None, default=None
+            Significance level for conformal interval (e.g. 0.05 for 95% coverage).
+            If None, defaults to the model's calibrated alpha (self.alpha).
+
+        Returns
+        -------
+        ConformalInterval : tuple-like
+            Unpacks as (predictions, lower, upper) or (predictions, lower, upper, abstain).
+            Also provides .prediction, .lower, .upper, .abstain attributes.
+        """
         predictions = self.predict(X)
         raw = self._raw_predict(X)
+
+        target_alpha = float(alpha) if alpha is not None else float(self.alpha)
+        if hasattr(self, "_cal_scores") and self._cal_scores is not None and len(self._cal_scores) > 0:
+            conformal_q = float(np.quantile(self._cal_scores, min(1.0, 1.0 - target_alpha)))
+        else:
+            conformal_q = getattr(self, "_conformal_q", 0.0)
 
         if self.task_ == "classification":
             if self._n_classes == 2:
@@ -1346,20 +1415,36 @@ class AstralModel:
 
             lower = 1.0 - max_prob
             upper = max_prob
-            abstain = max_prob < self._abstention_threshold
+            abstain = max_prob < (1.0 - conformal_q)
         else:
-            lower = raw - self._conformal_q
-            upper = raw + self._conformal_q
-            abstain = (upper - lower) > self._abstention_threshold
+            lower = raw - conformal_q
+            upper = raw + conformal_q
+            abstention_thresh = getattr(self, "_abstention_threshold", conformal_q * 2.0)
+            abstain = (upper - lower) > abstention_thresh
 
-        return predictions, lower, upper, abstain
+        return ConformalInterval(predictions, lower, upper, abstain)
 
-    def predict_set(self, X):
-        """Return conformal prediction sets for classification."""
+    def predict_set(self, X, alpha=None):
+        """
+        Return conformal prediction sets for classification.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Input feature matrix.
+        alpha : float or None, default=None
+            Significance level for conformal prediction sets (e.g. 0.1 for 90% coverage).
+            If None, defaults to the model's calibrated alpha (self.alpha).
+        """
         if self.task_ != "classification":
             raise ValueError("predict_set is only available for classification.")
         probs = self.predict_proba(X)
-        return [self.classes_[row >= 1.0 - self._conformal_q].tolist() for row in probs]
+        target_alpha = float(alpha) if alpha is not None else float(self.alpha)
+        if hasattr(self, "_cal_scores") and self._cal_scores is not None and len(self._cal_scores) > 0:
+            conformal_q = float(np.quantile(self._cal_scores, min(1.0, 1.0 - target_alpha)))
+        else:
+            conformal_q = getattr(self, "_conformal_q", 0.0)
+        return [self.classes_[row >= 1.0 - conformal_q].tolist() for row in probs]
 
     # ──────────────────────────────────────────────────────────────────────
     #  SCORING & EVALUATION
