@@ -53,6 +53,10 @@ Implemented in **pure NumPy** with zero mandatory C++ or heavy deep-learning dep
                  └── 6. Finite-Sample Conformal Calibration (Prediction sets, confidence intervals, abstention)
 ```
 
+<a href="https://colab.research.google.com/drive/1HJPG9_QBYha3z7YnDPuIs20AkWlr9SxW#scrollTo=peHWuw0Aavly">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
 1. **Adaptive Spectral Resonance Expansion:** Instead of exponential polynomial or Fourier dictionaries, ASTRAL positions empirical quantile kernels (Quantile Hat B-splines, Gaussian RBFs, and Sigmoids) directly over localized data densities.
 2. **Synergistic Resonance Discovery:** Evaluates pairwise interactions (multiplicative, soft ratio, minimum, and absolute differential) and retains only those exhibiting positive *Mutual Information Resonance Gain* over individual marginals:
    $$\text{Gain}(\psi; y) = I(\psi; y) - \max(I(\phi_i; y), I(\phi_j; y)) > \tau_{\text{resonance}}$$
